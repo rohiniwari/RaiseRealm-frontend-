@@ -176,14 +176,23 @@ The production build will be generated in the `dist` folder.
 
 ## 🌐 Deployment
 
-### Vercel Deployment (Recommended)
+### Netlify Deployment (Recommended)
+
+1. Push your code to a GitHub repository
+2. Import the project in Netlify
+3. Netlify will automatically detect settings from `netlify.toml`
+4. Deploy with a single click
+
+**Live Deployment URL:** [Your Netlify deployment URL]
+
+### Vercel Deployment
 
 1. Push your code to a GitHub repository
 2. Import the project in Vercel
 3. Configure the environment variables
 4. Deploy with a single click
 
-**Live Deployment URL:** [Add your Vercel deployment URL here]
+**Live Deployment URL:** [Your Vercel deployment URL]
 
 ---
 
@@ -191,7 +200,7 @@ The production build will be generated in the `dist` folder.
 
 The frontend is designed to work with a RESTful backend API.
 
-**API Base URL:** `http://localhost:5000/api`
+**API Base URL:** `https://raiserealm-backend.onrender.com/api`
 
 ### API Endpoints
 
