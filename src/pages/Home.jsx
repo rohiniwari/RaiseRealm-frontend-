@@ -19,9 +19,17 @@ export default function Home() {
   const fetchFeaturedProjects = async () => {
     try {
       const data = await projectService.getProjects({ limit: 6, sort: 'newest' });
-      setProjects(data);
+      // Ensure we always have an array
+      if (Array.isArray(data)) {
+        setProjects(data);
+      } else if (data && Array.isArray(data.projects)) {
+        setProjects(data.projects);
+      } else {
+        setProjects([]);
+      }
     } catch (error) {
       console.error('Error fetching projects:', error);
+      setProjects([]);
     } finally {
       setLoadingProjects(false);
     }
