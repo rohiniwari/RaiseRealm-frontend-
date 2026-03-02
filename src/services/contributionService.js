@@ -9,7 +9,12 @@ export const contributionService = {
   getUserContributions: async () => {
     // backend exposes user's contributions at /contributions/my-contributions
     const response = await api.get('/contributions/my-contributions');
-    return response.data;
+    const data = response.data;
+    // some endpoints may return { error: ... } on failure
+    if (Array.isArray(data)) return data;
+    if (data && Array.isArray(data.contributions)) return data.contributions;
+    // otherwise return empty array to avoid runtime errors
+    return [];
   },
 
   getProjectContributions: async (projectId) => {

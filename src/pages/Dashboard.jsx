@@ -49,7 +49,8 @@ export default function Dashboard() {
 
       setMyProjects(projects || []);
       setBackedProjects(backed || []);
-      setContributions(contribs || []);
+      // defensive: ensure array
+      setContributions(Array.isArray(contribs) ? contribs : []);
     } catch (error) {
       console.error('Error loading dashboard:', error);
     } finally {
