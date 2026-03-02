@@ -65,6 +65,7 @@ export default function ContributionModal({
           <StripeProvider clientSecret={clientSecret}>
             <PaymentForm
               amount={amount}
+              projectId={projectId}
               onSuccess={handleSuccess}
               onCancel={onClose}
             />

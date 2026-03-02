@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import { Loader2, CheckCircle } from 'lucide-react';
 
-export default function PaymentForm({ amount, onSuccess, onCancel }) {
+export default function PaymentForm({ amount, projectId, onSuccess, onCancel }) {
   const stripe = useStripe();
   const elements = useElements();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [paymentSuccess, setPaymentSuccess] = useState(false);
@@ -24,7 +26,8 @@ export default function PaymentForm({ amount, onSuccess, onCancel }) {
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/project/${paymentIntent?.metadata?.project_id || ''}`,
+        // ensure a deterministic return URL (use projectId passed from parent)
+        return_url: `${window.location.origin}/project/${projectId || ''}`,
       },
       redirect: 'if_required',
     });
@@ -35,6 +38,10 @@ export default function PaymentForm({ amount, onSuccess, onCancel }) {
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       setPaymentSuccess(true);
       onSuccess?.(paymentIntent);
+      // navigate to project page after a short delay so user sees success
+      setTimeout(() => {
+        if (projectId) navigate(`/project/${projectId}`);
+      }, 1200);
     } else {
       setIsLoading(false);
     }
