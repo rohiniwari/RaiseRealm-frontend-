@@ -28,11 +28,24 @@ export default function ProjectDetail() {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [checkoutSuccess, setCheckoutSuccess] = useState(false);
+  const [checkoutSessionId, setCheckoutSessionId] = useState(null);
 
 
   useEffect(() => {
     loadProject();
     loadComments();
+    // detect Stripe Checkout redirect with session_id
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    if (sessionId) {
+      setCheckoutSessionId(sessionId);
+      setCheckoutSuccess(true);
+      // remove session_id from URL to avoid repeated banner on refresh
+      params.delete('session_id');
+      const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+      window.history.replaceState({}, '', newUrl);
+    }
   }, [id]);
 
   const loadProject = async () => {
@@ -163,6 +176,12 @@ export default function ProjectDetail() {
       
       <main className="flex-1 bg-slate-50">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-8 py-12">
+          {checkoutSuccess && (
+            <div className="mb-6 p-4 rounded-md bg-green-50 border border-green-200 text-green-800">
+              <div className="font-medium">Payment completed successfully!</div>
+              <div className="text-sm">Thank you for your contribution. Session: {checkoutSessionId}</div>
+            </div>
+          )}
           {/* Project Header */}
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
