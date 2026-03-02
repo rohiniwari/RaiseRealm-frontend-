@@ -3,7 +3,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import PaymentForm from './PaymentForm';
 import StripeProvider from './StripeProvider';
 import api from '../../services/api';
-import { useState } from 'react';
 
 export default function ContributionModal({ 
   isOpen, 
@@ -92,15 +91,16 @@ export default function ContributionModal({
             <p className="text-slate-600">Preparing payment...</p>
           </div>
         ) : clientSecret ? (
-          <StripeProvider clientSecret={clientSecret}>
-            <PaymentForm
-              amount={amount}
-              projectId={projectId}
-              onSuccess={handleSuccess}
-              onCancel={onClose}
-            />
-          </StripeProvider>
-          <div className="mt-4">
+          <>
+            <StripeProvider clientSecret={clientSecret}>
+              <PaymentForm
+                amount={amount}
+                projectId={projectId}
+                onSuccess={handleSuccess}
+                onCancel={onClose}
+              />
+            </StripeProvider>
+            <div className="mt-4">
             <div className="flex items-center justify-between gap-3">
               <button
                 className="px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-md text-sm"
@@ -119,13 +119,14 @@ export default function ContributionModal({
                 </div>
               )}
             </div>
-            {paymentLink && (
-              <div className="mt-3">
-                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(paymentLink)}`} alt="payment-qr" />
-                {linkError && <p className="text-sm text-yellow-500 mt-2">{linkError}</p>}
-              </div>
-            )}
-          </div>
+              {paymentLink && (
+                <div className="mt-3">
+                  <img src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(paymentLink)}`} alt="payment-qr" />
+                  {linkError && <p className="text-sm text-yellow-500 mt-2">{linkError}</p>}
+                </div>
+              )}
+            </div>
+          </>
         ) : (
           <div className="text-center py-8 text-red-600">
             Failed to initialize payment. Please try again.
