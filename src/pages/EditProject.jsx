@@ -8,6 +8,7 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { projectService } from '../services/projectService';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { categories } from '../utils/helpers';
 import { Plus, Trash2, ArrowLeft } from 'lucide-react';
@@ -73,8 +74,12 @@ export default function EditProject() {
     setFormData(prev => {
       const updated = { ...prev, [name]: value };
       if (name === 'title' && !prev.image_url && value && value.length > 2) {
-        const keyword = value.split(' ').slice(0,4).join(',');
-        updated.image_url = `https://source.unsplash.com/1200x800/?${encodeURIComponent(keyword)}`;
+        const keyword = value.split(' ').slice(0,4).join(' ');
+        if (import.meta.env.VITE_USE_BACKEND_IMAGE === 'true') {
+          // image will be fetched when user clicks "Suggest" button
+        } else {
+          updated.image_url = `https://source.unsplash.com/1200x800/?${encodeURIComponent(keyword)}`;
+        }
       }
       return updated;
     });
@@ -148,9 +153,23 @@ export default function EditProject() {
     }
   };
 
-  const suggestImage = () => {
-    const keyword = (formData.title || formData.description || formData.category || 'project').split(' ').slice(0,4).join(',');
-    const url = `https://source.unsplash.com/1200x800/?${encodeURIComponent(keyword)}`;
+  const suggestImage = async () => {
+    const keyword = (formData.title || formData.description || formData.category || 'project')
+      .split(' ')
+      .slice(0,4)
+      .join(' ');
+    let url;
+    if (import.meta.env.VITE_USE_BACKEND_IMAGE === 'true') {
+      try {
+        const res = await api.get(`/ai/image?query=${encodeURIComponent(keyword)}`);
+        url = res.data.url;
+      } catch (err) {
+        console.error('Backend image suggestion failed:', err);
+      }
+    }
+    if (!url) {
+      url = `https://source.unsplash.com/1200x800/?${encodeURIComponent(keyword)}`;
+    }
     setFormData(prev => ({ ...prev, image_url: url }));
   };
 

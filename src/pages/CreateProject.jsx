@@ -8,6 +8,7 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { projectService } from '../services/projectService';
+import api from '../services/api';
 import { categories } from '../utils/helpers';
 import { Plus, Trash2, Upload } from 'lucide-react';
 
@@ -33,8 +34,13 @@ export default function CreateProject() {
       const updated = { ...prev, [name]: value };
       // Auto-suggest image when user types a title and no custom image provided
       if (name === 'title' && !prev.image_url && value && value.length > 2) {
-        const keyword = value.split(' ').slice(0,4).join(',');
-        updated.image_url = `https://source.unsplash.com/1200x800/?${encodeURIComponent(keyword)}`;
+        const keyword = value.split(' ').slice(0,4).join(' ');
+        if (import.meta.env.VITE_USE_BACKEND_IMAGE === 'true') {
+          // we can't async inside setState, so just leave placeholder and
+          // let user click Suggest button for backend request
+        } else {
+          updated.image_url = `https://source.unsplash.com/1200x800/?${encodeURIComponent(keyword)}`;
+        }
       }
       return updated;
     });
@@ -108,9 +114,23 @@ export default function CreateProject() {
     }
   };
 
-  const suggestImage = () => {
-    const keyword = (formData.title || formData.description || formData.category || 'project').split(' ').slice(0,4).join(',');
-    const url = `https://source.unsplash.com/1200x800/?${encodeURIComponent(keyword)}`;
+  const suggestImage = async () => {
+    const keyword = (formData.title || formData.description || formData.category || 'project')
+      .split(' ')
+      .slice(0,4)
+      .join(' ');
+    let url;
+    if (import.meta.env.VITE_USE_BACKEND_IMAGE === 'true') {
+      try {
+        const res = await api.get(`/ai/image?query=${encodeURIComponent(keyword)}`);
+        url = res.data.url;
+      } catch (err) {
+        console.error('Backend image suggestion failed:', err);
+      }
+    }
+    if (!url) {
+      url = `https://source.unsplash.com/1200x800/?${encodeURIComponent(keyword)}`;
+    }
     setFormData(prev => ({ ...prev, image_url: url }));
   };
 

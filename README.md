@@ -140,19 +140,73 @@ npm install
 
 ### Step 3: Configure Environment Variables
 
-Create a `.env` file in the root directory:
+Create a `.env` file in the root directory. At a minimum you must set the API URL that points to the running backend.
 
 ```
 env
-# API Configuration
+# Base URL for backend API (always required)
 VITE_API_URL=http://localhost:5000/api
 
-# Google OAuth (Optional)
+# (optional) if you configure a server‑side image suggestion endpoint,
+# set this to true so the frontend asks the backend instead of
+# hitting Unsplash directly.  Requires `/api/ai/image` on the server.
+VITE_USE_BACKEND_IMAGE=false
+
+# Google OAuth (optional, used for "Sign in with Google")
+# the backend needs to support a POST /auth/google-auth endpoint that
+# exchanges the authorization code for a user/token.  See backend docs.
 VITE_GOOGLE_CLIENT_ID=your-google-client-id
 
-# Stripe Public Key (Optional)
-VITE_STRIPE_PUBLIC_KEY=pk_test_your-stripe-key
+# (not stored locally) Stripe publishable key is fetched dynamically
+# from the backend at /payments/config.  Make sure the backend has
+# STRIPE_PUBLISHABLE_KEY set, along with STRIPE_SECRET_KEY and
+# STRIPE_WEBHOOK_SECRET so the webhook handler works.
+#
+# For local testing you do not need to add a VITE_STRIPE_PUBLIC_KEY,
+# the frontend will request it from the server automatically.
 ```
+
+> **Note:**
+> - Google login relies on the **authorization code flow**. After the user
+>   approves the app they are redirected to `/auth/callback` where the
+>   code is sent to the backend. The backend must then call Google to
+>   exchange the code and return a JWT token to the frontend. Add
+>   `GOOGLE_CLIENT_SECRET` to the backend environment and implement a
+>   corresponding `/auth/google-auth` route as shown in the backend
+>   repository.
+> - Stripe payments require the backend to store the publishable/secret
+>   keys and expose `/payments/config`, `/payments/create-intent` and
+>   `/payments/webhook`. Configure the webhook secret in Stripe and set
+>   `STRIPE_WEBHOOK_SECRET` on the backend so that contributions are
+>   recorded when Stripe notifies you of successful charges.
+> **Optional:** the frontend can request a suggested cover image based on
+> the project title. For security the API call is proxied through the
+> backend so that your Unsplash API key isn’t exposed. To support this
+> add an environment variable `UNSPLASH_ACCESS_KEY` on the backend and
+> implement a simple endpoint along the lines of:
+>
+> ```js
+> // in backend/controllers/aiController.js
+> const axios = require('axios');
+>
+> exports.getImageSuggestion = async (req, res) => {
+>   const { query } = req.query;
+>   try {
+>     const um = await axios.get('https://api.unsplash.com/photos/random', {
+>       params: { query, orientation: 'landscape' },
+>       headers: { Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}` }
+>     });
+>     res.json({ url: um.data.urls.regular });
+>   } catch (err) {
+>     res.status(500).json({ error: 'Unable to fetch image' });
+>   }
+> };
+> ```
+>
+> Wire the route (e.g. `/api/ai/image`) and update frontend
+> `aiSuggestionService.js` to call that endpoint instead of Unsplash
+directly.  This allows you to keep the key secret and avoid rate-limit
+issues.
 
 ### Step 4: Start Development Server
 
