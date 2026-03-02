@@ -7,7 +7,8 @@ export const contributionService = {
   },
 
   getUserContributions: async () => {
-    const response = await api.get('/contributions/user');
+    // backend exposes user's contributions at /contributions/my-contributions
+    const response = await api.get('/contributions/my-contributions');
     return response.data;
   },
 

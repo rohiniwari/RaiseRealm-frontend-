@@ -129,16 +129,20 @@ export default function Login() {
               </div>
             </div>
             
-            <Button 
-              type="button" 
-              variant="outline" 
-              className="w-full flex items-center justify-center gap-2"
-              onClick={handleGoogleLogin}
-              disabled={loading}
-            >
-              <Chrome className="h-5 w-5" />
-              Sign in with Google
-            </Button>
+            {import.meta.env.VITE_GOOGLE_CLIENT_ID ? (
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="w-full flex items-center justify-center gap-2"
+                onClick={handleGoogleLogin}
+                disabled={loading}
+              >
+                <Chrome className="h-5 w-5" />
+                Sign in with Google
+              </Button>
+            ) : (
+              <div className="text-center text-sm text-slate-500">Google sign-in not configured (set VITE_GOOGLE_CLIENT_ID)</div>
+            )}
 
             
             <p className="text-sm text-center text-slate-600">

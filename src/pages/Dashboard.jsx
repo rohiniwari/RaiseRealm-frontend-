@@ -32,14 +32,24 @@ export default function Dashboard() {
 
   const loadDashboardData = async () => {
     try {
-      const [projects, backed, contribs] = await Promise.all([
-        projectService.getUserProjects(),
-        projectService.getBackedProjects(),
-        contributionService.getUserContributions()
-      ]);
-      setMyProjects(projects);
-      setBackedProjects(backed);
-      setContributions(contribs);
+      const projects = await projectService.getUserProjects().catch(err => {
+        console.error('Error fetching user projects:', err);
+        return [];
+      });
+
+      const backed = await projectService.getBackedProjects().catch(err => {
+        console.error('Error fetching backed projects:', err);
+        return [];
+      });
+
+      const contribs = await contributionService.getUserContributions().catch(err => {
+        console.error('Error fetching contributions:', err);
+        return [];
+      });
+
+      setMyProjects(projects || []);
+      setBackedProjects(backed || []);
+      setContributions(contribs || []);
     } catch (error) {
       console.error('Error loading dashboard:', error);
     } finally {

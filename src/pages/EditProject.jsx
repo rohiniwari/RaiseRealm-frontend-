@@ -70,7 +70,14 @@ export default function EditProject() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => {
+      const updated = { ...prev, [name]: value };
+      if (name === 'title' && !prev.image_url && value && value.length > 2) {
+        const keyword = value.split(' ').slice(0,4).join(',');
+        updated.image_url = `https://source.unsplash.com/1200x800/?${encodeURIComponent(keyword)}`;
+      }
+      return updated;
+    });
   };
 
   const handleRewardChange = (index, field, value) => {
@@ -139,6 +146,12 @@ export default function EditProject() {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const suggestImage = () => {
+    const keyword = (formData.title || formData.description || formData.category || 'project').split(' ').slice(0,4).join(',');
+    const url = `https://source.unsplash.com/1200x800/?${encodeURIComponent(keyword)}`;
+    setFormData(prev => ({ ...prev, image_url: url }));
   };
 
   if (loading) {
@@ -257,15 +270,23 @@ export default function EditProject() {
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
                     <Label htmlFor="image_url">Image URL</Label>
-                    <Input
-                      id="image_url"
-                      name="image_url"
-                      type="url"
-                      value={formData.image_url}
-                      onChange={handleChange}
-                      placeholder="https://example.com/image.jpg"
-                      className="mt-2"
-                    />
+                    <div className="flex gap-2 mt-2">
+                      <Input
+                        id="image_url"
+                        name="image_url"
+                        type="url"
+                        value={formData.image_url}
+                        onChange={handleChange}
+                        placeholder="https://example.com/image.jpg"
+                        className="mt-0"
+                      />
+                      <Button type="button" variant="ghost" onClick={suggestImage}>Suggest</Button>
+                    </div>
+                    {formData.image_url && (
+                      <div className="mt-2">
+                        <img src={formData.image_url} alt="suggested" className="w-full h-32 object-cover rounded-md" />
+                      </div>
+                    )}
                   </div>
 
                   <div>
