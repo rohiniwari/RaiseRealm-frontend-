@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import AuthCallback from './pages/AuthCallback';
 import Projects from './pages/Projects';
 import CreateProject from './pages/CreateProject';
+import EditProject from './pages/EditProject';
 import ProjectDetail from './pages/ProjectDetail';
 import Dashboard from './pages/Dashboard';
 import HowItWorks from './pages/HowItWorks';
@@ -27,6 +28,7 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/create-project" element={<CreateProject />} />
             <Route path="/project/:id" element={<ProjectDetail />} />
+            <Route path="/project/:id/edit" element={<EditProject />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/my-projects" element={<Dashboard />} />
             <Route path="/backed-projects" element={<Dashboard />} />

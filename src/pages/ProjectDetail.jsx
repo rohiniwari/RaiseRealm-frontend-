@@ -12,7 +12,7 @@ import { contributionService } from '../services/contributionService';
 import { commentService } from '../services/commentService';
 import { useAuth } from '../context/AuthContext';
 import { formatCurrency, calculateDaysLeft, calculateProgress, formatDate } from '../utils/helpers';
-import { Heart, Share2, Check, Clock, Users, MessageCircle } from 'lucide-react';
+import { Heart, Share2, Check, Clock, Users, MessageCircle, Edit2, Trash2 } from 'lucide-react';
 import ContributionModal from '../components/payment/ContributionModal';
 
 
@@ -97,6 +97,18 @@ export default function ProjectDetail() {
     }
   };
 
+  const handleDeleteProject = async () => {
+    if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) return;
+    
+    try {
+      await projectService.deleteProject(id);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      alert('Failed to delete project');
+    }
+  };
+
   const shareProject = () => {
     if (navigator.share) {
       navigator.share({
@@ -159,9 +171,29 @@ export default function ProjectDetail() {
                   {project.category}
                 </span>
               </div>
-              <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900">
-                {project.title}
-              </h1>
+              <div className="flex items-center justify-between gap-4">
+                <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900">
+                  {project.title}
+                </h1>
+                {user && project.creator_id === user.id && (
+                  <div className="flex gap-2">
+                    <Link 
+                      to={`/project/${id}/edit`}
+                      className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                      title="Edit project"
+                    >
+                      <Edit2 className="h-5 w-5" />
+                    </Link>
+                    <button
+                      onClick={handleDeleteProject}
+                      className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                      title="Delete project"
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </button>
+                  </div>
+                )}
+              </div>
               <p className="mt-4 text-slate-600">{project.description}</p>
               
               <div className="mt-6 flex items-center gap-4">

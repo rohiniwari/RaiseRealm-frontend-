@@ -10,7 +10,7 @@ import { projectService } from '../services/projectService';
 import { contributionService } from '../services/contributionService';
 import { useAuth } from '../context/AuthContext';
 import { formatCurrency } from '../utils/helpers';
-import { Plus, TrendingUp, Users, DollarSign, Trash2 } from 'lucide-react';
+import { Plus, TrendingUp, Users, DollarSign, Trash2, Edit2 } from 'lucide-react';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -207,13 +207,22 @@ export default function Dashboard() {
                           <Link to={`/project/${project.id}`}>
                             <ProjectCard project={project} />
                           </Link>
-                          <button
-                            onClick={(e) => handleDeleteProject(project.id, e)}
-                            className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600 hover:scale-110"
-                            title="Delete project"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                          <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                            <Link 
+                              to={`/project/${project.id}/edit`}
+                              className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 hover:scale-110 transition-all"
+                              title="Edit project"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </Link>
+                            <button
+                              onClick={(e) => handleDeleteProject(project.id, e)}
+                              className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 hover:scale-110 transition-all"
+                              title="Delete project"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
