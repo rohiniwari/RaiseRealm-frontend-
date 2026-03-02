@@ -8,58 +8,36 @@ export default function AuthCallback() {
 
   useEffect(() => {
     const handleOAuthCallback = async () => {
-      // Get the hash fragment from URL (contains access token for implicit flow)
-      const hash = window.location.hash.substring(1);
-      const params = new URLSearchParams(hash);
-      
-      const accessToken = params.get('access_token');
-      const idToken = params.get('id_token');
-      const expiresIn = params.get('expires_in');
-      const scope = params.get('scope');
-      const state = params.get('state');
-      
-      // Check for error in URL
+      // Use authorization code flow: Google returns a `code` in query string
       const urlParams = new URLSearchParams(window.location.search);
       const errorParam = urlParams.get('error');
-      
       if (errorParam) {
         setError(urlParams.get('error_description') || 'Authentication failed');
         return;
       }
 
-      if (accessToken) {
-        // For Google OAuth, we need to get user info from Google
-        try {
-          // Decode the ID token to get user info
-          const response = await fetch(
-            `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`
-          );
-          
-          if (response.ok) {
-            const profile = await response.json();
-            
-            // Send to backend
-            const backendResponse = await api.post('/auth/google-auth', {
-              email: profile.email,
-              name: profile.name,
-              googleId: profile.sub,
-              avatar_url: profile.picture
-            });
+      const code = urlParams.get('code');
 
-            if (backendResponse.data.token) {
-              localStorage.setItem('token', backendResponse.data.token);
-              localStorage.setItem('user', JSON.stringify(backendResponse.data.user));
-              navigate('/dashboard');
-            }
-          } else {
-            setError('Failed to get user info from Google');
+      if (code) {
+        try {
+          // Send authorization code to backend to exchange for tokens and create/get user
+          const redirectUri = window.location.origin + '/auth/callback';
+          const backendResponse = await api.post('/auth/google-auth', { code, redirectUri });
+
+          if (backendResponse.data?.token) {
+            localStorage.setItem('token', backendResponse.data.token);
+            localStorage.setItem('user', JSON.stringify(backendResponse.data.user));
+            navigate('/dashboard');
+            return;
           }
+
+          setError('Authentication failed: no token returned from backend');
         } catch (err) {
-          setError(err.message || 'Authentication failed');
+          console.error('Error exchanging code:', err);
+          setError(err.response?.data?.error || err.message || 'Authentication failed');
         }
       } else {
-        // No access token - check if there's any error
-        setError('No access token received');
+        setError('No authorization code received');
       }
     };
 

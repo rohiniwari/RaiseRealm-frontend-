@@ -47,13 +47,15 @@ export default function Login() {
 
       // Redirect to Google OAuth - this is the proper way to handle OAuth
       const redirectUri = window.location.origin + '/auth/callback';
-      const authUrl = 
+      // Use authorization code flow (response_type=code) and request offline access
+      const authUrl =
         'https://accounts.google.com/o/oauth2/v2/auth?' +
         'client_id=' + encodeURIComponent(clientId) +
         '&redirect_uri=' + encodeURIComponent(redirectUri) +
-        '&response_type=token' +
-        '&scope=' + encodeURIComponent('email profile') +
-        '&prompt=select_account';
+        '&response_type=code' +
+        '&scope=' + encodeURIComponent('openid email profile') +
+        '&access_type=offline' +
+        '&prompt=consent';
       
       // Store loading state before redirect
       sessionStorage.setItem('googleAuthLoading', 'true');
