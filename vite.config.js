@@ -4,7 +4,9 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
-  base: './',
+  // Use absolute base so built assets are always loaded from the root URL.
+  // Using './' breaks when navigating to nested routes (e.g. /auth/callback)
+  base: '/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
