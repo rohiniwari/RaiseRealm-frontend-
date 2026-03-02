@@ -62,7 +62,7 @@ export default function ContributionModal({
             <p className="text-slate-600">Preparing payment...</p>
           </div>
         ) : clientSecret ? (
-          <StripeProvider>
+          <StripeProvider clientSecret={clientSecret}>
             <PaymentForm
               amount={amount}
               onSuccess={handleSuccess}

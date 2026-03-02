@@ -5,7 +5,7 @@ import api from '../../services/api';
 
 let stripePromise = null;
 
-export default function StripeProvider({ children }) {
+export default function StripeProvider({ children, clientSecret }) {
   const [stripe, setStripe] = useState(null);
   const [error, setError] = useState(null);
 
@@ -47,5 +47,12 @@ export default function StripeProvider({ children }) {
     return <div>Loading payment system...</div>;
   }
 
-  return <Elements stripe={stripe}>{children}</Elements>;
+  // pass clientSecret (if available) as an option to Elements
+  const options = clientSecret ? { clientSecret } : {};
+
+  return (
+    <Elements stripe={stripe} options={options}>
+      {children}
+    </Elements>
+  );
 }
