@@ -12,7 +12,12 @@ export default function StripeProvider({ children }) {
     const initStripe = async () => {
       try {
         const response = await api.get('/payments/config');
-        stripePromise = loadStripe(response.data.publishableKey);
+        const key = response?.data?.publishableKey;
+        if (!key) {
+          console.error('Stripe publishable key not found in /payments/config');
+          return;
+        }
+        stripePromise = loadStripe(key);
         setStripe(stripePromise);
       } catch (error) {
         console.error('Error loading Stripe:', error);
