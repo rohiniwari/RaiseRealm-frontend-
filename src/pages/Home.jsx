@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import AIChatbot from '../components/chatbot/AIChatbot';
+import ProjectCard from '../components/project/ProjectCard';
 import { projectService } from '../services/projectService';
-import { formatCurrency, calculateProgress } from '../utils/helpers';
+import { formatCurrency } from '../utils/helpers';
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
@@ -285,58 +286,15 @@ export default function Home() {
 
             {/* Project Cards */}
             <div className="grid md:grid-cols-3 gap-8">
-              {projects.map((project, index) => (
-                <div 
-                  key={index}
-                  className="group bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
-                >
-                  {/* Card Header with Gradient */}
-                  <div className={`h-2 bg-gradient-to-r ${project.color}`} />
-                  
-                  {/* Image */}
-                  <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={project.image} 
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${project.color} text-white`}>
-                        {project.category}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-slate-900 mb-4 group-hover:text-primary-600 transition-colors">
-                      {project.title}
-                    </h3>
-
-                    {/* Progress Bar */}
-                    <div className="mb-4">
-                      <div className="flex justify-between text-sm mb-2">
-                        <span className="font-semibold text-slate-900">{project.raised} raised</span>
-                        <span className="text-slate-500">of {project.goal}</span>
-                      </div>
-                      <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-                        <div 
-                          className={`h-full rounded-full bg-gradient-to-r ${project.color} transition-all duration-1000 ease-out`}
-                          style={{ width: `${project.progress}%` }}
-                        />
-                      </div>
-                      <div className="mt-1 text-right text-xs text-slate-500">
-                        {project.progress}% funded
-                      </div>
-                    </div>
-
-                    {/* Button */}
-                    <button className="w-full py-3 rounded-xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition-colors">
-                      Support This Project
-                    </button>
-                  </div>
-                </div>
-              ))}
+              {projects.length > 0 ? (
+                projects.map((project, index) => (
+                  <ProjectCard key={project.id || index} project={project} />
+                ))
+              ) : loadingProjects ? (
+                <p className="text-center text-slate-500 col-span-full">Loading projects…</p>
+              ) : (
+                <p className="text-center text-slate-500 col-span-full">No projects to display.</p>
+              )}
             </div>
 
             {/* View All Button */}

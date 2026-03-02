@@ -259,7 +259,7 @@ export default function EditProject() {
                       value={formData.category}
                       onChange={handleChange}
                       required
-                      className="mt-2 w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none"
+                      className="mt-2 w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none text-foreground"
                     >
                       {categories.map(cat => (
                         <option key={cat} value={cat}>

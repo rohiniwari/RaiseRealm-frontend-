@@ -69,7 +69,7 @@ export default function Projects() {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="h-10 rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                className="h-10 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground"
               >
                 <option value="all">All Categories</option>
                 {categories.map(cat => (
@@ -79,7 +79,7 @@ export default function Projects() {
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="h-10 rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                className="h-10 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground"
               >
                 <option value="newest">Newest</option>
                 <option value="popular">Most Popular</option>
