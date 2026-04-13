@@ -114,7 +114,7 @@ export default function ProjectDetail() {
         <main className="flex-1 flex items-center justify-center px-4 py-16">
           <div className="text-center">
             <h1 className="text-3xl font-bold">Project not found</h1>
-            <p className="mt-3 text-slate-600">The project you are looking for does not exist or has been removed.</p>
+            <p className="mt-2 text-slate-600">The project you are looking for does not exist or has been removed.</p>
             <Button className="mt-6" onClick={() => navigate('/projects')}>
               Back to Projects
             </Button>
@@ -221,7 +221,7 @@ export default function ProjectDetail() {
                           <p className="mt-2 text-slate-700">{comment.content}</p>
                           <p className="mt-3 text-xs text-slate-500">{formatDate(comment.createdAt || comment.created_at)}</p>
                         </div>
-                      ))}
+                      ))
                     )}
                   </div>
                 </CardContent>
