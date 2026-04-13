@@ -36,7 +36,6 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Dark Mode Toggle */}
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
@@ -112,7 +111,6 @@ export default function Header() {
               </>
             )}
             <button 
-              data-collapse-toggle="mobile-menu" 
               type="button" 
               className="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
