@@ -83,7 +83,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950">
       <Header />
       
       <main className="flex-1">
@@ -136,7 +136,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link 
                 to="/create-project" 
-                className="group px-8 py-4 bg-white text-slate-900 font-semibold rounded-full hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
+                className="group px-8 py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-semibold rounded-full hover:bg-blue-50 dark:hover:bg-slate-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
               >
                 Start Your Project
                 <svg className="inline-block w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -164,14 +164,14 @@ export default function Home() {
         </section>
 
         {/* Introduction Section */}
-        <section className="py-20 lg:py-32 bg-white">
+        <section className="py-20 lg:py-32 bg-white dark:bg-slate-950">
           <div className="max-w-4xl mx-auto px-6">
             <div className="text-left">
-              <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-8">
+              <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-8">
                 Welcome to RaiseRealm
               </h2>
               
-              <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
+              <div className="space-y-6 text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
                 <p>
                   Welcome to RaiseRealm, a milestone-driven crowdfunding platform built to transform bold ideas into measurable impact.
                 </p>
@@ -185,33 +185,33 @@ export default function Home() {
                 </p>
                 
                 <div className="grid md:grid-cols-2 gap-8 py-8">
-                  <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+                  <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
                     <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center mb-4">
                       <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-semibold text-slate-900 mb-2">For Creators</h3>
-                    <p className="text-slate-600">
+                    <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">For Creators</h3>
+                    <p className="text-slate-600 dark:text-slate-300">
                       A platform to share your story, define clear goals, and build trust through progress updates and structured milestones.
                     </p>
                   </div>
                   
-                  <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+                  <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
                     <div className="w-12 h-12 rounded-xl bg-secondary-100 flex items-center justify-center mb-4">
                       <svg className="w-6 h-6 text-secondary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-semibold text-slate-900 mb-2">For Backers</h3>
-                    <p className="text-slate-600">
+                    <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">For Backers</h3>
+                    <p className="text-slate-600 dark:text-slate-300">
                       Confidence, transparency, and visibility into how funds are being used every step of the way.
                     </p>
                   </div>
                 </div>
                 
-                <div className="pt-8 border-t border-slate-200">
-                  <p className="text-2xl font-bold text-slate-900 mb-4">
+                <div className="pt-8 border-t border-slate-200 dark:border-slate-700">
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
                     This is more than crowdfunding.
                     <br />
                     <span className="text-primary-600">This is structured growth, community-powered innovation, and responsible funding combined.</span>
@@ -262,9 +262,9 @@ export default function Home() {
               {stats.map((stat, index) => (
                 <div 
                   key={index} 
-                  className="text-center p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
+                  className="text-center p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <div className="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">
+                  <div className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-2">
                     {stat.value}
                   </div>
                   <div className="text-sm text-slate-500 uppercase tracking-wider">
@@ -301,7 +301,7 @@ export default function Home() {
             <div className="text-center mt-12">
               <Link 
                 to="/projects"
-                className="inline-flex items-center px-8 py-4 rounded-full bg-white border-2 border-slate-200 text-slate-900 font-semibold hover:border-primary-500 hover:text-primary-600 transition-all"
+                className="inline-flex items-center px-8 py-4 rounded-full bg-white dark:bg-slate-900 dark:border-slate-700 border-2 border-slate-200 text-slate-900 dark:text-white font-semibold hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-300 transition-all"
               >
                 View All Projects
                 <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -330,7 +330,7 @@ export default function Home() {
               {testimonials.map((testimonial, index) => (
                 <div 
                   key={index}
-                  className="group relative bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                  className="group relative bg-slate-50 dark:bg-slate-900 rounded-2xl p-8 border border-slate-100 dark:border-slate-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                 >
                   {/* Quote Icon */}
                   <div className="absolute -top-4 left-8">
@@ -381,7 +381,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 
                 to="/create-project" 
-                className="px-8 py-4 bg-white text-slate-900 font-semibold rounded-full hover:bg-blue-50 transition-all shadow-lg"
+                className="px-8 py-4 bg-white dark:bg-slate-800 dark:text-white text-slate-900 font-semibold rounded-full hover:bg-blue-50 dark:hover:bg-slate-700 transition-all shadow-lg"
               >
                 Start Your Project
               </Link>

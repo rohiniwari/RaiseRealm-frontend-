@@ -84,7 +84,7 @@ export default function Dashboard() {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-1 bg-slate-50">
+      <main className="flex-1 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-8 py-12">
           {/* Dashboard Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">

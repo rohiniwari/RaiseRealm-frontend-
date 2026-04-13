@@ -45,7 +45,7 @@ export default function Projects() {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-1 bg-slate-50">
+      <main className="flex-1 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-8 py-12">
           {/* Page Header */}
           <div className="mb-8">
@@ -54,7 +54,7 @@ export default function Projects() {
           </div>
 
           {/* Search and Filters */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 mb-8">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 mb-8">
             <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />

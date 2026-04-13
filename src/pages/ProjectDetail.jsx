@@ -129,7 +129,7 @@ export default function ProjectDetail() {
   const daysLeft = calculateDaysLeft(project.end_date || project.deadline);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
       <Header />
       <main className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl space-y-8">
@@ -153,17 +153,17 @@ export default function ProjectDetail() {
                 <p className="mt-6 text-slate-700">{project.description}</p>
 
                 <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                  <div className="rounded-2xl bg-slate-100 p-4">
-                    <p className="text-sm uppercase tracking-[0.12em] text-slate-500">Raised</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900">{formatCurrency(project.current_amount || project.raised || 0)}</p>
+                  <div className="rounded-2xl bg-slate-100 dark:bg-slate-800 p-4">
+                    <p className="text-sm uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Raised</p>
+                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{formatCurrency(project.current_amount || project.raised || 0)}</p>
                   </div>
-                  <div className="rounded-2xl bg-slate-100 p-4">
-                    <p className="text-sm uppercase tracking-[0.12em] text-slate-500">Goal</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900">{formatCurrency(project.goal_amount || project.goal)}</p>
+                  <div className="rounded-2xl bg-slate-100 dark:bg-slate-800 p-4">
+                    <p className="text-sm uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Goal</p>
+                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{formatCurrency(project.goal_amount || project.goal)}</p>
                   </div>
-                  <div className="rounded-2xl bg-slate-100 p-4">
-                    <p className="text-sm uppercase tracking-[0.12em] text-slate-500">Time left</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900">{daysLeft} days</p>
+                  <div className="rounded-2xl bg-slate-100 dark:bg-slate-800 p-4">
+                    <p className="text-sm uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Time left</p>
+                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{daysLeft} days</p>
                   </div>
                 </div>
 
@@ -174,11 +174,11 @@ export default function ProjectDetail() {
               </div>
 
               <div className="space-y-4">
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="rounded-2xl border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-700 p-6 shadow-sm">
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-sm text-slate-500">Support this project</p>
-                      <p className="mt-2 text-xl font-semibold text-slate-900">{formatCurrency(project.minimum_contribution || 0)} minimum</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">Support this project</p>
+                      <p className="mt-2 text-xl font-semibold text-slate-900 dark:text-white">{formatCurrency(project.minimum_contribution || 0)} minimum</p>
                     </div>
                   </div>
                   <Button className="mt-6 w-full" onClick={() => setShowContributionModal(true)}>
@@ -213,13 +213,13 @@ export default function ProjectDetail() {
 
                   <div className="space-y-4">
                     {comments.length === 0 ? (
-                      <p className="text-sm text-slate-500">No comments yet. Be the first to share your thoughts.</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">No comments yet. Be the first to share your thoughts.</p>
                     ) : (
                       comments.map((comment) => (
-                        <div key={comment.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                          <p className="text-sm font-semibold text-slate-900">{comment.user?.name || 'Anonymous'}</p>
-                          <p className="mt-2 text-slate-700">{comment.content}</p>
-                          <p className="mt-3 text-xs text-slate-500">{formatDate(comment.createdAt || comment.created_at)}</p>
+                        <div key={comment.id} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4">
+                          <p className="text-sm font-semibold text-slate-900 dark:text-white">{comment.user?.name || 'Anonymous'}</p>
+                          <p className="mt-2 text-slate-700 dark:text-slate-300">{comment.content}</p>
+                          <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{formatDate(comment.createdAt || comment.created_at)}</p>
                         </div>
                       ))
                     )}

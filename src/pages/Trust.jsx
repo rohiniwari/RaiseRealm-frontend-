@@ -51,7 +51,7 @@ const Trust = () => {
         </section>
 
         {/* How Milestone Funding Works */}
-        <section className="py-16 lg:py-24 bg-white">
+        <section className="py-16 lg:py-24 bg-white dark:bg-slate-950">
           <div className="max-w-screen-xl mx-auto px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl lg:text-4xl font-heading font-bold text-slate-900 mb-4">
@@ -64,40 +64,40 @@ const Trust = () => {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Step 1 */}
-              <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
                 <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">Creator Defines Milestones</h3>
-                <p className="text-slate-600 text-sm">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Creator Defines Milestones</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">
                   While creating the project, creators set up clear milestones with title, description, required amount, and target date.
                 </p>
               </div>
 
               {/* Step 2 */}
-              <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
                 <div className="w-12 h-12 bg-secondary-100 rounded-xl flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-secondary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">Backers Track Progress</h3>
-                <p className="text-slate-600 text-sm">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Backers Track Progress</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">
                   All supporters can view milestone progress, updates, and reports in real-time through the project dashboard.
                 </p>
               </div>
 
               {/* Step 3 */}
-              <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
                 <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">Funds Released on Completion</h3>
-                <p className="text-slate-600 text-sm">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Funds Released on Completion</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">
                   When a milestone is completed and verified, funds are released to the creator to proceed to the next phase.
                 </p>
               </div>
@@ -106,7 +106,7 @@ const Trust = () => {
         </section>
 
         {/* Milestone Timeline Demo - Keeping existing */}
-        <section className="py-16 lg:py-24 bg-slate-50">
+        <section className="py-16 lg:py-24 bg-slate-50 dark:bg-slate-950">
           <div className="max-w-screen-xl mx-auto px-6 lg:px-8">
             <div className="grid lg:grid-cols-12 gap-10 items-center">
               <div className="lg:col-span-5">
@@ -142,8 +142,8 @@ const Trust = () => {
               </div>
 
               <div className="lg:col-span-7">
-                <div className="rounded-2xl border border-slate-200 bg-white shadow-lift overflow-hidden">
-                  <div className="p-6 lg:p-7 border-b border-slate-200">
+                <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lift overflow-hidden">
+                  <div className="p-6 lg:p-7 border-b border-slate-200 dark:border-slate-700">
                     <div className="flex items-center justify-between">
                       <div>
                         <h3 className="font-heading font-bold text-xl">Milestone timeline (demo)</h3>

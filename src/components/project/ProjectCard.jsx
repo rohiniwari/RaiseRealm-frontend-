@@ -66,7 +66,7 @@ export default function ProjectCard({ project }) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-slate-900/0 to-slate-900/0" />
           <div className="absolute top-4 left-4 flex gap-2">
-            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-white/90 text-slate-900 capitalize">
+            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-white/90 dark:bg-slate-800 text-slate-900 dark:text-slate-100 capitalize">
               {project.category}
             </span>
             {project.status === 'funded' && (
@@ -77,10 +77,10 @@ export default function ProjectCard({ project }) {
           </div>
         </div>
         <CardContent className="p-6">
-          <h3 className="font-heading font-bold text-lg text-slate-900 group-hover:text-primary-700 transition-colors line-clamp-1">
+          <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-slate-100 group-hover:text-primary-700 transition-colors line-clamp-1">
             {project.title}
           </h3>
-          <p className="mt-2 text-sm text-slate-600 line-clamp-2">
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 line-clamp-2">
             {project.description}
           </p>
 
@@ -115,21 +115,21 @@ export default function ProjectCard({ project }) {
                   </button>
                   
                   {showShareMenu && (
-                    <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-2 z-50">
-                      <div className="px-3 py-2 border-b border-slate-100">
-                        <span className="text-xs font-semibold text-slate-600">Share this project</span>
+                    <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-2 z-50">
+                      <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-700">
+                        <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">Share this project</span>
                       </div>
                       {shareOptions.map((option) => (
                         <button
                           key={option.name}
                           onClick={(e) => handleShareOptionClick(e, option.url)}
-                          className={`w-full px-3 py-2 flex items-center gap-3 text-sm text-slate-700 hover:text-white transition-colors ${option.color}`}
+                          className={`w-full px-3 py-2 flex items-center gap-3 text-sm text-slate-700 dark:text-slate-200 hover:text-white transition-colors ${option.color}`}
                         >
                           <option.icon className="h-4 w-4" />
                           {option.name}
                         </button>
                       ))}
-                      <div className="border-t border-slate-100 mt-1 pt-1">
+                      <div className="border-t border-slate-100 dark:border-slate-700 mt-1 pt-1">
                         <button
                           onClick={(e) => {
                             e.preventDefault();
@@ -137,7 +137,7 @@ export default function ProjectCard({ project }) {
                             copyToClipboard();
                             setShowShareMenu(false);
                           }}
-                          className="w-full px-3 py-2 flex items-center gap-3 text-sm text-slate-700 hover:bg-slate-100 transition-colors"
+                          className="w-full px-3 py-2 flex items-center gap-3 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                         >
                           <Copy className="h-4 w-4" />
                           Copy Link

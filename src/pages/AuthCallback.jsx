@@ -46,7 +46,7 @@ export default function AuthCallback() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">Authentication Failed</h1>
           <p className="text-slate-600 mb-4">{error}</p>
@@ -59,7 +59,7 @@ export default function AuthCallback() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
         <p className="text-slate-600">Completing authentication...</p>

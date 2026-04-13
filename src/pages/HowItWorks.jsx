@@ -66,22 +66,22 @@ const HowItWorks = () => {
         </section>
 
         {/* Step-by-Step Section */}
-        <section className="py-20 px-6 bg-white">
+        <section className="py-20 px-6 bg-white dark:bg-slate-950">
           <div className="max-w-screen-xl mx-auto">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {steps.map((step, index) => (
                 <div 
                   key={index} 
-                  className="group bg-white rounded-2xl p-8 border border-slate-200 shadow-soft hover:shadow-lift transition-all duration-300 hover:-translate-y-1"
+                  className="group bg-white dark:bg-slate-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 shadow-soft hover:shadow-lift transition-all duration-300 hover:-translate-y-1"
                 >
                   <div className="flex items-start gap-4">
                     <div className="text-4xl mb-2">{step.icon}</div>
                     <div>
-                      <h3 className="text-xl font-heading font-bold text-slate-900 mb-3">{step.title}</h3>
-                      <p className="text-slate-600 mb-4 leading-relaxed">
+                      <h3 className="text-xl font-heading font-bold text-slate-900 dark:text-white mb-3">{step.title}</h3>
+                      <p className="text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
                         {step.description}
                       </p>
-                      <p className="text-sm text-slate-500 italic border-l-2 border-primary-200 pl-3">
+                      <p className="text-sm text-slate-500 dark:text-slate-400 italic border-l-2 border-primary-200 pl-3">
                         {step.subtitle}
                       </p>
                     </div>
@@ -93,7 +93,7 @@ const HowItWorks = () => {
         </section>
 
         {/* Why Choose RaiseRealm */}
-        <section className="py-20 px-6 bg-slate-50">
+        <section className="py-20 px-6 bg-slate-50 dark:bg-slate-950">
           <div className="max-w-screen-xl mx-auto">
             <h2 className="text-3xl font-heading font-bold text-center text-slate-900 mb-4">
               Why Creators Choose RaiseRealm
@@ -165,7 +165,7 @@ const HowItWorks = () => {
             </p>
             <Link
               to="/create-project"
-              className="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-full hover:bg-blue-50 transition-colors shadow-lg"
+              className="inline-flex items-center px-8 py-4 bg-white dark:bg-slate-800 dark:text-blue-300 text-blue-600 font-semibold rounded-full hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors shadow-lg"
             >
               Start Your Project
               <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

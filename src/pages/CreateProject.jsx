@@ -108,11 +108,11 @@ export default function CreateProject() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
       <Header />
       <main className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-4xl">
-          <div className="border border-slate-200/80 bg-white shadow-sm rounded-3xl">
+          <div className="border border-slate-200/80 bg-white dark:bg-slate-900 shadow-sm rounded-3xl">
             <div className="p-6">
               <div className="mb-6">
                 <h1 className="text-3xl font-bold text-slate-900">Create a New Project</h1>
@@ -230,7 +230,7 @@ export default function CreateProject() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {formData.rewards.map((reward, index) => (
-                      <div key={index} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                      <div key={index} className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4">
                         <div className="grid gap-4 sm:grid-cols-2">
                           <div className="space-y-2">
                             <Label htmlFor={`reward-title-${index}`}>Reward Title</Label>
@@ -277,7 +277,7 @@ export default function CreateProject() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {formData.milestones.map((milestone, index) => (
-                      <div key={index} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                      <div key={index} className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4">
                         <div className="grid gap-4 sm:grid-cols-2">
                           <div className="space-y-2">
                             <Label htmlFor={`milestone-title-${index}`}>Milestone Title</Label>

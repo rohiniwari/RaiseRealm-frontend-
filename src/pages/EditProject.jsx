@@ -189,10 +189,10 @@ export default function EditProject() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
       <Header />
       
-      <main className="flex-1 bg-slate-50 py-12">
+      <main className="flex-1 bg-slate-50 dark:bg-slate-950 py-12">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
           {/* Header */}
           <div className="mb-8">
