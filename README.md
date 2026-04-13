@@ -1,14 +1,14 @@
 # RaiseRealm - Crowdfunding Platform
 
-<p align="center">
-  <img src="/public/logo.png" alt="RaiseRealm Logo" width="120" />
+<p align=\"center\">
+  <img src=\"/public/logo.png\" alt=\"RaiseRealm Logo\" width=\"120\" />
 </p>
 
-<p align="center">
+<p align=\"center\">
   <strong>Fuel Vision. Fund Future.</strong>
 </p>
 
-<p align="center">
+<p align=\"center\">
   A milestone-driven crowdfunding platform built with React, Tailwind CSS, and ShadCN UI
 </p>
 
@@ -152,7 +152,7 @@ VITE_API_URL=http://localhost:5000/api
 # hitting Unsplash directly.  Requires `/api/ai/image` on the server.
 VITE_USE_BACKEND_IMAGE=false
 
-# Google OAuth (optional, used for "Sign in with Google")
+# Google OAuth (optional, used for \"Sign in with Google\")
 # the backend needs to support a POST /auth/google-auth endpoint that
 # exchanges the authorization code for a user/token.  See backend docs.
 VITE_GOOGLE_CLIENT_ID=your-google-client-id
@@ -181,7 +181,7 @@ VITE_GOOGLE_CLIENT_ID=your-google-client-id
 >   recorded when Stripe notifies you of successful charges.
 > **Optional:** the frontend can request a suggested cover image based on
 > the project title. For security the API call is proxied through the
-> backend so that your Unsplash API key isn’t exposed. To support this
+> backend so that your Unsplash API key isn't exposed. To support this
 > add an environment variable `UNSPLASH_ACCESS_KEY` on the backend and
 > implement a simple endpoint along the lines of:
 >
@@ -347,6 +347,7 @@ This project is licensed under the MIT License.
 
 ---
 
-<p align="center">
+<p align=\"center\">
   Made with ❤️ by RaiseRealm Team
 </p>
+
