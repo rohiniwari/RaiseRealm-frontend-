@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Button from '../ui/button';
+import { Button } from '../ui/button';
 
 const SocialShare = ({ project }) => {
   const [copied, setCopied] = useState(false);

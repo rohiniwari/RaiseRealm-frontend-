@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { contributionService } from '../../services/contributionService';
-import Button from '../ui/button';
+import { Button } from '../ui/button';
 
 const SupporterBadge = ({ contributions }) => {
   const [isSupporter, setIsSupporter] = useState(false);

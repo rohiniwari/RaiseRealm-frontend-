@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Button from '../ui/button';
+import { Button } from '../ui/button';
 
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);

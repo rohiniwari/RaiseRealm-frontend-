@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Card from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import Skeleton from '../ui/Skeleton';
 
 const SuccessStories = () => {
