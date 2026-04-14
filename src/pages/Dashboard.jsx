@@ -12,23 +12,35 @@ import { useAuth } from '../context/AuthContext';
 import { formatCurrency } from '../utils/helpers';
 import { Plus, TrendingUp, Users, DollarSign, Trash2, Edit2 } from 'lucide-react';
 
+import CreatorDashboard from './CreatorDashboard';
+import BackerDashboard from './BackerDashboard';
+
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [myProjects, setMyProjects] = useState([]);
-  const [backedProjects, setBackedProjects] = useState([]);
-  const [contributions, setContributions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('my-projects');
-  const [suggestionKey, setSuggestionKey] = useState(0);
 
   useEffect(() => {
     if (!user) {
       navigate('/login');
       return;
     }
-    loadDashboardData();
-  }, [user]);
+  }, [user, navigate]);
+
+  if (!user) {
+    return null;
+  }
+
+  if (user.role === 'creator') {
+    return <CreatorDashboard />;
+  }
+
+  if (user.role === 'backer') {
+    return <BackerDashboard />;
+  }
+
+  // Fallback: redirect or show error
+  navigate('/login');
+  return null;
 
   const loadDashboardData = async () => {
     try {

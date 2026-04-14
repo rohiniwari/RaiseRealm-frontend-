@@ -1,45 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useNotifications } from '../../context/NotificationContext';
+
 import { Button } from '../ui/button';
 
 const NotificationBell = () => {
-  const [notifications, setNotifications] = useState([]);
+  const { notifications, unreadCount, markAsRead, clearAll } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
 
-  useEffect(() => {
-    // Mock notifications - replace with actual API call
-    const mockNotifications = [
-      {
-        id: 1,
-        type: 'contribution',
-        message: 'Someone contributed to your project!',
-        read: false,
-        createdAt: new Date()
-      },
-      {
-        id: 2,
-        type: 'comment',
-        message: 'New comment on your project',
-        read: false,
-        createdAt: new Date(Date.now() - 3600000)
-      }
-    ];
-    setNotifications(mockNotifications);
-    setUnreadCount(mockNotifications.filter(n => !n.read).length);
-  }, []);
-
-  const markAsRead = (id) => {
-    setNotifications(prev =>
-      prev.map(n => n.id === id ? { ...n, read: true } : n)
-    );
-    setUnreadCount(prev => Math.max(0, prev - 1));
-  };
-
-  const markAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-    setUnreadCount(0);
-  };
+  const markAllAsRead = () => clearAll();
 
   return (
     <div className="relative">
