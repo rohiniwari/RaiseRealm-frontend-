@@ -49,6 +49,13 @@ export function calculateProgress(current, goal) {
   return Math.min(progress, 100).toFixed(0);
 }
 
+export function calculateMilestoneProgress(currentRaised, milestoneAmount) {
+  if (milestoneAmount <= 0) return 0;
+  const progress = (currentRaised / milestoneAmount) * 100;
+  return Math.min(progress, 100).toFixed(0);
+}
+
+
 export const categories = [
   { value: 'technology', label: 'Technology' },
   { value: 'art', label: 'Art' },

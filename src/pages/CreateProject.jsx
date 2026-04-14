@@ -7,11 +7,14 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
+import { Steps, Step } from '../components/ui/steps';
+import ProjectPreview from '../components/project/ProjectPreview';
 import { projectService } from '../services/projectService';
 import { categories } from '../utils/helpers';
 
 export default function CreateProject() {
   const navigate = useNavigate();
+  const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -23,6 +26,7 @@ export default function CreateProject() {
     goal_amount: '',
     image_url: '',
     end_date: '',
+    media: [], // For drag-drop files
     rewards: [{ title: '', description: '', min_amount: '' }],
     milestones: [{ title: '', description: '', amount_required: '', target_date: '' }]
   });
@@ -44,292 +48,191 @@ export default function CreateProject() {
     setFormData((prev) => ({ ...prev, milestones: updated }));
   };
 
-  const addReward = () => {
-    setFormData((prev) => ({
-      ...prev,
-      rewards: [...prev.rewards, { title: '', description: '', min_amount: '' }]
-    }));
-  };
+  const addReward = () => setFormData((prev) => ({
+    ...prev,
+    rewards: [...prev.rewards, { title: '', description: '', min_amount: '' }]
+  }));
 
-  const removeReward = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      rewards: prev.rewards.filter((_, i) => i !== index)
-    }));
-  };
+  const removeReward = (index) => setFormData((prev) => ({
+    ...prev,
+    rewards: prev.rewards.filter((_, i) => i !== index)
+  }));
 
-  const addMilestone = () => {
-    setFormData((prev) => ({
-      ...prev,
-      milestones: [...prev.milestones, { title: '', description: '', amount_required: '', target_date: '' }]
-    }));
-  };
+  const addMilestone = () => setFormData((prev) => ({
+    ...prev,
+    milestones: [...prev.milestones, { title: '', description: '', amount_required: '', target_date: '' }]
+  }));
 
-  const removeMilestone = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      milestones: prev.milestones.filter((_, i) => i !== index)
-    }));
-  };
+  const removeMilestone = (index) => setFormData((prev) => ({
+    ...prev,
+    milestones: prev.milestones.filter((_, i) => i !== index)
+  }));
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleNext = () => {
+    // Basic validation
+    if (step === 0 && !formData.title) return setError('Title required');
+    setStep(step + 1);
     setError('');
-    setSuccess('');
-    setLoading(true);
+  };
 
+  const handlePrev = () => setStep(Math.max(0, step - 1));
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError('');
     try {
       const projectData = {
         ...formData,
         goal_amount: parseFloat(formData.goal_amount) || 0,
-        rewards: formData.rewards
-          .filter((reward) => reward.title && reward.min_amount)
-          .map((reward) => ({
-            ...reward,
-            min_amount: parseFloat(reward.min_amount)
-          })),
-        milestones: formData.milestones
-          .filter((milestone) => milestone.title && milestone.amount_required)
-          .map((milestone) => ({
-            ...milestone,
-            amount_required: parseFloat(milestone.amount_required)
-          }))
+        rewards: formData.rewards.filter(r => r.title && r.min_amount).map(r => ({
+          ...r,
+          min_amount: parseFloat(r.min_amount)
+        })),
+        milestones: formData.milestones.filter(m => m.title && m.amount_required).map(m => ({
+          ...m,
+          amount_required: parseFloat(m.amount_required)
+        }))
       };
-
       const project = await projectService.createProject(projectData);
-      setSuccess('Project created successfully! Redirecting...');
-      setTimeout(() => navigate(`/project/${project.id}`), 800);
+      setSuccess('Created!');
+      setTimeout(() => navigate(`/project/${project.id}`), 1500);
     } catch (err) {
-      setError(err?.message || 'Failed to create project. Please try again.');
-      console.error('Create project error:', err);
+      setError(err.message || 'Failed to create');
     } finally {
       setLoading(false);
     }
   };
 
+  const stepsContent = [
+    // Step 0: Basics
+    <div className="space-y-6">
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label>Project Title *</Label>
+          <Input
+            name="title"
+            placeholder="Enter project title"
+            value={formData.title}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>Category</Label>
+          <select name="category" value={formData.category} onChange={handleChange} className="w-full p-2 border rounded">
+            {categories.map(cat => (
+              <option key={cat.value} value={cat.value}>{cat.label}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <Label>Description *</Label>
+        <Textarea
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          rows={4}
+          placeholder="Your project story"
+        />
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label>Funding Goal (₹)</Label>
+          <Input name="goal_amount" type="number" value={formData.goal_amount} onChange={handleChange} />
+        </div>
+        <div className="space-y-2">
+          <Label>Deadline</Label>
+          <Input name="end_date" type="date" value={formData.end_date} onChange={handleChange} />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <Label>Cover Image URL (optional)</Label>
+        <Input name="image_url" type="url" value={formData.image_url} onChange={handleChange} />
+      </div>
+    </div>,
+
+    // Step 1: Media (stub for drag-drop)
+    <div>
+      <h3>Media Upload (Drag-drop coming)</h3>
+      <p>Upload images/videos here (URL fallback).</p>
+      <Input name="image_url" type="url" value={formData.image_url} onChange={handleChange} />
+    </div>,
+
+    // Step 2: Rewards
+    <div className="space-y-4">
+      <h3>Rewards</h3>
+      {formData.rewards.map((r, i) => (
+        <div key={i} className="p-4 border rounded">
+          <Input placeholder="Title" value={r.title} onChange={e => handleRewardChange(i, 'title', e.target.value)} />
+          <Input type="number" placeholder="Min Amount" value={r.min_amount} onChange={e => handleRewardChange(i, 'min_amount', e.target.value)} />
+          <Textarea placeholder="Description" value={r.description} onChange={e => handleRewardChange(i, 'description', e.target.value)} />
+          <Button type="button" variant="outline" onClick={() => removeReward(i)}>Remove</Button>
+        </div>
+      ))}
+      <Button type="button" onClick={addReward}>Add Reward</Button>
+    </div>,
+
+    // Step 3: Milestones
+    <div className="space-y-4">
+      <h3>Milestones</h3>
+      {formData.milestones.map((m, i) => (
+        <div key={i} className="p-4 border rounded">
+          <Input placeholder="Title" value={m.title} onChange={e => handleMilestoneChange(i, 'title', e.target.value)} />
+          <Input type="number" placeholder="Amount" value={m.amount_required} onChange={e => handleMilestoneChange(i, 'amount_required', e.target.value)} />
+          <Input type="date" value={m.target_date || ''} onChange={e => handleMilestoneChange(i, 'target_date', e.target.value)} />
+          <Textarea placeholder="Description" value={m.description} onChange={e => handleMilestoneChange(i, 'description', e.target.value)} />
+          <Button type="button" variant="outline" onClick={() => removeMilestone(i)}>Remove</Button>
+        </div>
+      ))}
+      <Button type="button" onClick={addMilestone}>Add Milestone</Button>
+    </div>,
+
+    // Step 4: Preview
+    <div className="grid lg:grid-cols-2 gap-8 items-start">
+      <div>
+        <h3>Review & Preview</h3>
+        <Button onClick={handleSubmit} disabled={loading} className="w-full mb-4">
+          {loading ? 'Creating...' : 'Launch Project'}
+        </Button>
+        <Button type="button" variant="outline" onClick={handlePrev} className="w-full">
+          Back to Edit
+        </Button>
+      </div>
+      <ProjectPreview formData={formData} />
+    </div>
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen flex flex-col bg-slate-50">
       <Header />
-      <main className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto w-full max-w-4xl">
-          <div className="border border-slate-200/80 bg-white dark:bg-slate-900 shadow-sm rounded-3xl">
-            <div className="p-6">
-              <div className="mb-6">
-                <h1 className="text-3xl font-bold text-slate-900">Create a New Project</h1>
-                <p className="mt-2 text-slate-500">Launch your campaign and connect with backers.</p>
+      <main className="flex-1 py-12 px-4 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent mb-4">
+              Create Project Wizard
+            </h1>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">Step-by-step guide to launch your campaign</p>
+          </div>
+
+          <div className="bg-white/50 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8 max-w-5xl mx-auto">
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-800 text-sm">
+                {error}
               </div>
+            )}
+            {success && (
+              <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-emerald-800 text-sm">
+                {success}
+              </div>
+            )}
 
-              {error && (
-                <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                  {error}
-                </div>
-              )}
-
-              {success && (
-                <div className="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
-                  {success}
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-8">
-                <Card className="border border-slate-200">
-                  <CardHeader>
-                    <CardTitle>Project Basics</CardTitle>
-                    <CardDescription>Tell your backers what makes your project special.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="title">Title</Label>
-                        <Input
-                          id="title"
-                          name="title"
-                          placeholder="Enter your project title"
-                          value={formData.title}
-                          onChange={handleChange}
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="category">Category</Label>
-                        <select
-                          id="category"
-                          name="category"
-                          value={formData.category}
-                          onChange={handleChange}
-                          className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground"
-                          required
-                        >
-                          {categories.map((category) => (
-                            <option key={category.value} value={category.value}>
-                              {category.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="description">Description</Label>
-                      <Textarea
-                        id="description"
-                        name="description"
-                        placeholder="Share your story and explain your mission"
-                        value={formData.description}
-                        onChange={handleChange}
-                        rows={5}
-                        required
-                      />
-                    </div>
-
-                    <div className="grid gap-6 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="goal_amount">Funding Goal</Label>
-                        <Input
-                          id="goal_amount"
-                          name="goal_amount"
-                          type="number"
-                          placeholder="10000"
-                          value={formData.goal_amount}
-                          onChange={handleChange}
-                          min="1"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="end_date">Deadline</Label>
-                        <Input
-                          id="end_date"
-                          name="end_date"
-                          type="date"
-                          value={formData.end_date}
-                          onChange={handleChange}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="image_url">Cover Image URL</Label>
-                      <Input
-                        id="image_url"
-                        name="image_url"
-                        type="url"
-                        placeholder="https://example.com/cover.jpg"
-                        value={formData.image_url}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="border border-slate-200">
-                  <CardHeader>
-                    <CardTitle>Rewards</CardTitle>
-                    <CardDescription>Offer backers incentives for their support.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {formData.rewards.map((reward, index) => (
-                      <div key={index} className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4">
-                        <div className="grid gap-4 sm:grid-cols-2">
-                          <div className="space-y-2">
-                            <Label htmlFor={`reward-title-${index}`}>Reward Title</Label>
-                            <Input
-                              id={`reward-title-${index}`}
-                              value={reward.title}
-                              onChange={(e) => handleRewardChange(index, 'title', e.target.value)}
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor={`reward-min-${index}`}>Minimum Amount</Label>
-                            <Input
-                              id={`reward-min-${index}`}
-                              type="number"
-                              value={reward.min_amount}
-                              onChange={(e) => handleRewardChange(index, 'min_amount', e.target.value)}
-                            />
-                          </div>
-                        </div>
-                        <div className="mt-4 space-y-2">
-                          <Label htmlFor={`reward-desc-${index}`}>Description</Label>
-                          <Textarea
-                            id={`reward-desc-${index}`}
-                            value={reward.description}
-                            onChange={(e) => handleRewardChange(index, 'description', e.target.value)}
-                            rows={3}
-                          />
-                        </div>
-                        <Button type="button" variant="outline" onClick={() => removeReward(index)}>
-                          Remove reward
-                        </Button>
-                      </div>
-                    ))}
-                    <Button type="button" variant="secondary" onClick={addReward}>
-                      Add reward tier
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                <Card className="border border-slate-200">
-                  <CardHeader>
-                    <CardTitle>Milestones</CardTitle>
-                    <CardDescription>Show backers how you plan to deliver results.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {formData.milestones.map((milestone, index) => (
-                      <div key={index} className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4">
-                        <div className="grid gap-4 sm:grid-cols-2">
-                          <div className="space-y-2">
-                            <Label htmlFor={`milestone-title-${index}`}>Milestone Title</Label>
-                            <Input
-                              id={`milestone-title-${index}`}
-                              value={milestone.title}
-                              onChange={(e) => handleMilestoneChange(index, 'title', e.target.value)}
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor={`milestone-amount-${index}`}>Amount Required</Label>
-                            <Input
-                              id={`milestone-amount-${index}`}
-                              type="number"
-                              value={milestone.amount_required}
-                              onChange={(e) => handleMilestoneChange(index, 'amount_required', e.target.value)}
-                            />
-                          </div>
-                        </div>
-                        <div className="mt-4 space-y-2">
-                          <Label htmlFor={`milestone-date-${index}`}>Target Date</Label>
-                          <Input
-                            id={`milestone-date-${index}`}
-                            type="date"
-                            value={milestone.target_date}
-                            onChange={(e) => handleMilestoneChange(index, 'target_date')}
-                          />
-                        </div>
-                        <Textarea
-                          value={milestone.description}
-                          onChange={(e) => handleMilestoneChange(index, 'description', e.target.value)}
-                          rows={3}
-                          placeholder="Milestone details"
-                        />
-                        <Button type="button" variant="outline" onClick={() => removeMilestone(index)}>
-                          Remove milestone
-                        </Button>
-                      </div>
-                    ))}
-                    <Button type="button" variant="secondary" onClick={addMilestone}>
-                      Add milestone
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                <div className="flex justify-end">
-                  <Button type="submit" disabled={loading}>
-                    {loading ? 'Creating...' : 'Launch project'}
-                  </Button>
-                </div>
-              </form>
-            </div>
+            <Steps value={step} onValueChange={setStep} className="max-w-4xl mx-auto">
+              {stepsContent.map((content, index) => (
+                <Step key={index}>
+                  {content}
+                </Step>
+              ))}
+            </Steps>
           </div>
         </div>
       </main>

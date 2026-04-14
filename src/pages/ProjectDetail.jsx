@@ -9,10 +9,11 @@ import { Label } from '../components/ui/label';
 import { projectService } from '../services/projectService';
 import { contributionService } from '../services/contributionService';
 import { commentService } from '../services/commentService';
-import { formatCurrency, calculateDaysLeft, calculateProgress, formatDate } from '../utils/helpers';
+import { formatCurrency, calculateDaysLeft, calculateProgress, formatDate, calculateMilestoneProgress } from '../utils/helpers';
 import SocialShare from '../components/project/SocialShare';
 import CampaignUpdates from '../components/project/CampaignUpdates';
 import SupporterBadge from '../components/project/SupporterBadge';
+import MilestoneTracker from '../components/project/MilestoneTracker';
 import Skeleton from '../components/ui/Skeleton';
 import ContributionModal from '../components/payment/ContributionModal';
 
@@ -31,11 +32,22 @@ export default function ProjectDetail() {
     loadProject();
     loadComments();
     loadContributions();
+
+    // Live comment polling
+    const interval = setInterval(() => {
+      loadComments();
+      loadContributions();
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, [id]);
 
   const loadProject = async () => {
     try {
       const data = await projectService.getProjectById(id);
+      if (data.milestones) {
+        data.milestones = data.milestones;
+      }
       setProject(data);
     } catch (err) {
       console.error('Unable to load project:', err);
@@ -139,8 +151,10 @@ export default function ProjectDetail() {
             </div>
           )}
 
+          <StatsOverview project={project} contributions={contributions} />
           <Card className="p-6">
             <div className="grid gap-10 lg:grid-cols-[2fr_1fr]">
+
               <div>
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
@@ -167,27 +181,31 @@ export default function ProjectDetail() {
                   </div>
                 </div>
 
-                <div className="mt-6 rounded-full bg-slate-200 h-3 overflow-hidden">
-                  <div className="h-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 transition-all" style={{ width: `${progressValue}%` }} />
-                </div>
+<Progress value={parseInt(progressValue)} size="lg" className="mt-6 h-4" />
                 <p className="mt-3 text-sm text-slate-500">{progressValue}% funded</p>
               </div>
-
-              <div className="space-y-4">
-                <div className="rounded-2xl border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-700 p-6 shadow-sm">
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Support this project</p>
-                      <p className="mt-2 text-xl font-semibold text-slate-900 dark:text-white">{formatCurrency(project.minimum_contribution || 0)} minimum</p>
-                    </div>
-                  </div>
-                  <Button className="mt-6 w-full" onClick={() => setShowContributionModal(true)}>
-                    Contribute Now
-                  </Button>
-                </div>
-
-                <SupporterBadge contributions={contributions} />
+              {project.milestones && project.milestones.length > 0 && (
+                <MilestoneTracker milestones={project.milestones} currentRaised={project.current_amount || project.raised || 0} />
+              )}
               </div>
+
+                <div className="space-y-4">
+                  {project.rewards && project.rewards.length > 0 && (
+                    <RewardTiers rewards={project.rewards} currentRaised={project.current_amount || 0} />
+                  )}
+                  <div className="rounded-2xl border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-700 p-6 shadow-sm">
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">Support this project</p>
+                        <p className="mt-2 text-xl font-semibold text-slate-900 dark:text-white">{formatCurrency(project.minimum_contribution || 0)} minimum</p>
+                      </div>
+                    </div>
+                    <Button className="mt-6 w-full" onClick={() => setShowContributionModal(true)}>
+                      Contribute Now
+                    </Button>
+                  </div>
+                  <SupporterBadge contributions={contributions} />
+                </div>
             </div>
           </Card>
 
@@ -199,16 +217,12 @@ export default function ProjectDetail() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <form onSubmit={handleCommentSubmit} className="space-y-3">
-                    <div className="space-y-2">
-                      <Label htmlFor="comment">Leave a comment</Label>
-                      <Textarea
-                        id="comment"
-                        value={commentValue}
-                        onChange={(e) => setCommentValue(e.target.value)}
-                        rows={4}
-                      />
-                    </div>
-                    <Button type="submit">Post Comment</Button>
+                    <RichCommentEditor 
+                      value={commentValue}
+                      onChange={setCommentValue}
+                      onSubmit={handleCommentSubmit}
+                      placeholder="Leave a comment, ask questions, or share encouragement..." 
+                    />
                   </form>
 
                   <div className="space-y-4">
@@ -217,7 +231,10 @@ export default function ProjectDetail() {
                     ) : (
                       comments.map((comment) => (
                         <div key={comment.id} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4">
-                          <p className="text-sm font-semibold text-slate-900 dark:text-white">{comment.user?.name || 'Anonymous'}</p>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold text-slate-900 dark:text-white">{comment.user?.name || 'Anonymous'}</span>
+                            <SupporterBadge contributions={contributions} userId={comment.user_id} />
+                          </div>
                           <p className="mt-2 text-slate-700 dark:text-slate-300">{comment.content}</p>
                           <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{formatDate(comment.createdAt || comment.created_at)}</p>
                         </div>

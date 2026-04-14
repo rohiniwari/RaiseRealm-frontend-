@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNotifications } from '../../context/NotificationContext';
 import { projectService } from '../../services/projectService';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
+import { RichCommentEditor } from '../ui/RichCommentEditor';
 
 const CampaignUpdates = ({ projectId }) => {
   const [updates, setUpdates] = useState([]);
@@ -54,6 +56,10 @@ const CampaignUpdates = ({ projectId }) => {
       setUpdates(prev => [update, ...prev]);
       setNewUpdate('');
       setShowForm(false);
+
+      // Notify supporters
+      const { addNotification } = useNotifications();
+      addNotification('New campaign update posted!', 'success', `/project/${projectId}`);
     } catch (error) {
       console.error('Failed to post update:', error);
     }
@@ -86,13 +92,11 @@ const CampaignUpdates = ({ projectId }) => {
 
       {showForm && (
         <form onSubmit={handleSubmitUpdate} className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <textarea
+          <RichCommentEditor
             value={newUpdate}
-            onChange={(e) => setNewUpdate(e.target.value)}
-            placeholder="Share an update with your supporters..."
-            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white resize-none"
-            rows={4}
-            required
+            onChange={setNewUpdate}
+            onSubmit={handleSubmitUpdate}
+            placeholder="Share an update with your supporters, milestones achieved, or progress reports..."
           />
           <div className="flex justify-end space-x-2 mt-3">
             <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
