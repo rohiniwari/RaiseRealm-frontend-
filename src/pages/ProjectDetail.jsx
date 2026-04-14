@@ -154,7 +154,6 @@ export default function ProjectDetail() {
           <StatsOverview project={project} contributions={contributions} />
           <Card className="p-6">
             <div className="grid gap-10 lg:grid-cols-[2fr_1fr]">
-
               <div>
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
@@ -181,31 +180,31 @@ export default function ProjectDetail() {
                   </div>
                 </div>
 
-<Progress value={parseInt(progressValue)} size="lg" className="mt-6 h-4" />
+                <Progress value={parseInt(progressValue)} size="lg" className="mt-6 h-4" />
                 <p className="mt-3 text-sm text-slate-500">{progressValue}% funded</p>
               </div>
+
               {project.milestones && project.milestones.length > 0 && (
                 <MilestoneTracker milestones={project.milestones} currentRaised={project.current_amount || project.raised || 0} />
               )}
-              </div>
 
-                <div className="space-y-4">
-                  {project.rewards && project.rewards.length > 0 && (
-                    <RewardTiers rewards={project.rewards} currentRaised={project.current_amount || 0} />
-                  )}
-                  <div className="rounded-2xl border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-700 p-6 shadow-sm">
-                    <div className="flex items-center justify-between gap-4">
-                      <div>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">Support this project</p>
-                        <p className="mt-2 text-xl font-semibold text-slate-900 dark:text-white">{formatCurrency(project.minimum_contribution || 0)} minimum</p>
-                      </div>
+              <div className="space-y-4">
+                {project.rewards && project.rewards.length > 0 && (
+                  <RewardTiers rewards={project.rewards} currentRaised={project.current_amount || 0} />
+                )}
+                <div className="rounded-2xl border border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-700 p-6 shadow-sm">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">Support this project</p>
+                      <p className="mt-2 text-xl font-semibold text-slate-900 dark:text-white">{formatCurrency(project.minimum_contribution || 0)} minimum</p>
                     </div>
-                    <Button className="mt-6 w-full" onClick={() => setShowContributionModal(true)}>
-                      Contribute Now
-                    </Button>
                   </div>
-                  <SupporterBadge contributions={contributions} />
+                  <Button className="mt-6 w-full" onClick={() => setShowContributionModal(true)}>
+                    Contribute Now
+                  </Button>
                 </div>
+                <SupporterBadge contributions={contributions} />
+              </div>
             </div>
           </Card>
 
@@ -275,3 +274,4 @@ export default function ProjectDetail() {
     </div>
   );
 }
+

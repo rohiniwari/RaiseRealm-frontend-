@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { useToast } from '../hooks/useToast';
-import { NotificationBell } from '../components/layout/NotificationBell';
+import NotificationBell from '../components/layout/NotificationBell.jsx';
 
 const NotificationContext = createContext();
 
@@ -17,23 +17,17 @@ export const NotificationProvider = ({ children }) => {
   const [unreadCount, setUnreadCount] = useState(0);
   const { toast } = useToast();
 
-  const addNotification = (message, type = 'info', link = null) => {
+  const addNotification = (message, type = 'info') => {
     const notif = {
       id: Date.now(),
       message,
       type,
-      link,
       read: false,
       timestamp: new Date().toLocaleString()
     };
     setNotifications(prev => [notif, ...prev]);
     setUnreadCount(prev => prev + 1);
     
-    // Browser push notification
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('RaiseRealm Update', { body: message, icon: '/logo.png' });
-    }
-
     toast({
       title: type.toUpperCase(),
       description: message,

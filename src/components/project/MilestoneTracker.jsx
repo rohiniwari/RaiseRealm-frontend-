@@ -1,11 +1,11 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
-import { Milestone, Target, CheckCircle2 } from 'lucide-react';
+import { Milestone, Target } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { formatCurrency, calculateMilestoneProgress } from '../../utils/helpers';
+import { formatCurrency } from '../../utils/helpers';
 
-const MilestoneTracker = ({ milestones = [], currentRaised = 0, isOwner = false })
+const MilestoneTracker = ({ milestones = [], currentRaised = 0 }) => {
   const totalMilestones = milestones.length;
 
   const getMilestoneProgress = (milestoneAmount) => {
@@ -26,11 +26,11 @@ const MilestoneTracker = ({ milestones = [], currentRaised = 0, isOwner = false 
           <Milestone className="h-5 w-5 text-primary" />
           <CardTitle className="text-xl">Milestone Progress</CardTitle>
         </div>
-        <p className="text-sm text-slate-600">Track funding milestones and project delivery</p>
+        <p className="text-sm text-slate-600">Track funding milestones</p>
       </CardHeader>
       <CardContent className="space-y-4">
         {totalMilestones === 0 ? (
-          <p className="text-center text-slate-500 py-8">No milestones defined</p>
+          <p className="text-center text-slate-500 py-8">No milestones</p>
         ) : (
           <div className="space-y-6">
             {milestones.map((milestone, index) => {
@@ -52,7 +52,7 @@ const MilestoneTracker = ({ milestones = [], currentRaised = 0, isOwner = false 
                           {progress}%
                         </div>
                       </div>
-                      <div className="w-2 h-12 bg-slate-200 mx-1 mt-1" />
+                      {!isLast && <div className="w-2 h-12 bg-slate-200 mx-1 mt-1" />}
                     </div>
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center gap-2">
@@ -64,12 +64,11 @@ const MilestoneTracker = ({ milestones = [], currentRaised = 0, isOwner = false 
                       <p className="text-sm text-slate-600">{milestone.description}</p>
                       <div className="flex items-center gap-2 text-xs text-slate-500">
                         <Target className="h-3 w-3" />
-                        ₹{formatCurrency(milestone.amount_required || 0)} • 
-                        {milestone.target_date && new Date(milestone.target_date).toLocaleDateString()}
+                        ₹{formatCurrency(milestone.amount_required || 0)}
                       </div>
                     </div>
                   </div>
-<Progress value={parseInt(progress)} size="md" showPercentage={false} className="h-3" />
+                  <Progress value={progress} className="h-3" />
                   {!isLast && (
                     <div className="h-px bg-gradient-to-r from-slate-200 to-slate-100 mx-16" />
                   )}
