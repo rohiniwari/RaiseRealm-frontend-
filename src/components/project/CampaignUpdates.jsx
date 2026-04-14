@@ -3,7 +3,7 @@ import { useNotifications } from '../../context/NotificationContext';
 import { projectService } from '../../services/projectService';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
-import { RichCommentEditor } from '../ui/RichCommentEditor';
+import RichCommentEditor from '../ui/RichCommentEditor.jsx';
 
 const CampaignUpdates = ({ projectId }) => {
   const [updates, setUpdates] = useState([]);

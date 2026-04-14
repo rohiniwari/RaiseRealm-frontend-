@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { useToast } from '../hooks/useToast';
+import { useToast } from '../hooks/useToast.jsx';
 import NotificationBell from '../components/layout/NotificationBell.jsx';
 
 const NotificationContext = createContext();
