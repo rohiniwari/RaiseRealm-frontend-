@@ -1,38 +1,29 @@
-# Role-Based User Authentication & Dashboards
+# Advanced Project Creation Wizard (2/12)
 
 ## Plan
-- Add role selector to Register
-- Extend AuthContext for role
-- Split Dashboard into CreatorDashboard.jsx, BackerDashboard.jsx
-- Protected routes + role guard
-- Role-specific UI/analytics
+Production-grade wizard w/ creator role guard, form validation, rich editor, drag-drop, autosave.
 
-## Steps (0/7)
+## Steps
+### Dependencies ✓
+- [x] All installed (npm i complete)
 
-### 1. Backend Ready?
-- [ ] Assume backend handles role in register/login response
+### Implementation ✓
+- [x] 1. Creator role guard (useAuth + redirect if !creator)
+- [x] 2. react-hook-form + zod schema (validation setup)
 
-### 2. Frontend Core
-- [ ] Register.jsx: Add role dropdown (creator/backer)
-- [ ] AuthContext.jsx: Add role to user object
-- [ ] services/authService.js: Pass role in register
+### Next Up
+- [ ] 3. Rich editor Step (react-quill)
+- [ ] 4. Date picker + Funding step
+- [ ] 5. Drag-drop media (react-dropzone + upload)
+- [ ] 6. Autosave debounce
+- [ ] 7. Framer animations
+- [ ] 8. projectService.uploadMedia
+- [ ] 9. Error/loading polish
+- [ ] 10. Full test
+- [ ] 11. Preview enhancements
+- [ ] 12. Done! `npm run build`
 
-### 3. Dashboards
-- [ ] Create CreatorDashboard.jsx (projects, analytics, updates)
-- [ ] Create BackerDashboard.jsx (contributions, supported, comments)
-- [ ] Update Dashboard.jsx → role router
+**Status**: Dev server running http://localhost:3000. Role guard + form ready. Test /create-project after login as creator.
+**Next Tool**: Rich editor component.
 
-### 4. Protection
-- [ ] ProtectedRoute component (role check)
-- [ ] Update App.jsx routes
-
-### 5. UI Polish
-- [ ] Header adapt role (Creator/Backer tabs)
-- [ ] Role badges/personalized greeting
-
-### 6. Test
-- [ ] npm run build
-- [ ] Test register → role → dashboard
-
-**Next**: Update Register.jsx with role field.
 

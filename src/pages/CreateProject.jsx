@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from '../context/AuthContext';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { Button } from '../components/ui/button';
@@ -12,9 +15,74 @@ import ProjectPreview from '../components/project/ProjectPreview';
 import { projectService } from '../services/projectService';
 import { categories } from '../utils/helpers';
 
+const roleGuardSchema = z.object({
+  role: z.enum(['creator']),
+});
+
+import { z } from 'zod';
+
+const createProjectSchema = z.object({
+  title: z.string().min(3, 'Title must be at least 3 chars'),
+  category: z.enum(['technology', 'art', 'film', 'music', 'games']),
+  description: z.string().min(10),
+  goal_amount: z.number().min(1000, 'Goal min ₹1000'),
+  end_date: z.string().refine((date) => new Date(date) > new Date(), 'End date must be future'),
+  rewards: z.array(z.object({
+    title: z.string(),
+    description: z.string(),
+    min_amount: z.number()
+  })).min(1),
+  milestones: z.array(z.object({
+    title: z.string(),
+    description: z.string(),
+    amount_required: z.number(),
+    target_date: z.string()
+  })).optional()
+});
+
+type CreateProjectForm = z.infer<typeof createProjectSchema>;
+
 export default function CreateProject() {
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    if (user.role !== 'creator') {
+      navigate('/dashboard');
+      return;
+    }
+  }, [user, authLoading, navigate]);
+
+  if (authLoading || !user) return <div>Loading...</div>;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    watch,
+    setValue,
+    getValues
+  } = useForm<CreateProjectForm>({
+    resolver: zodResolver(createProjectSchema),
+    defaultValues: {
+      title: '',
+      category: 'technology',
+      description: '',
+      goal_amount: 10000,
+      end_date: '',
+      rewards: [{ title: '', description: '', min_amount: 1000 }],
+      milestones: []
+    }
+  });
+
   const [step, setStep] = useState(0);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
