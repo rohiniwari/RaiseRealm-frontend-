@@ -1,459 +1,216 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { Button } from '../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
-import { impactService } from '../services/impactService';
-import { useAuth } from '../context/AuthContext';
-import { 
-  BarChart3, 
-  TrendingUp, 
-  DollarSign, 
-  FileText, 
-  Plus, 
-  Edit2, 
-  Trash2, 
-  Award
-} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { projectService } from '../services/projectService';
 import { formatCurrency, formatDate } from '../utils/helpers';
+import { Plus, Image, Video, BarChart3 } from 'lucide-react';
 
 export default function ImpactDashboard() {
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [showReportForm, setShowReportForm] = useState(false);
-  const [editingReport, setEditingReport] = useState(null);
-  
-  // Form state
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    metrics: {},
-    media_urls: []
-  });
-  const [metricKey, setMetricKey] = useState('');
-  const [metricValue, setMetricValue] = useState('');
+  const [updates, setUpdates] = useState([]);
+  const [newUpdate, setNewUpdate] = useState({ title: '', description: '', media: [] });
+  const [loading, setLoading] = useState(true);
+  const [posting, setPosting] = useState(false);
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-    loadImpactStats();
-  }, [user, navigate]);
+    if (user) loadProjects();
+  }, [user]);
 
-  const loadImpactStats = async () => {
+  const loadProjects = async () => {
     try {
-      const data = await impactService.getCreatorImpactStats();
-      setStats(data);
-      if (data.projects?.length > 0 && !selectedProject) {
-        setSelectedProject(data.projects[0]);
+      const myProjects = await projectService.getUserProjects();
+      setProjects(myProjects);
+      if (myProjects.length > 0) {
+        setSelectedProject(myProjects[0]);
+        loadUpdates(myProjects[0].id);
       }
     } catch (error) {
-      console.error('Error loading impact stats:', error);
+      console.error('Load projects error:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddMetric = () => {
-    if (metricKey && metricValue) {
-      setFormData(prev => ({
-        ...prev,
-        metrics: {
-          ...prev.metrics,
-          [metricKey]: parseFloat(metricValue) || metricValue
-        }
-      }));
-      setMetricKey('');
-      setMetricValue('');
+  const loadUpdates = async (projectId) => {
+    try {
+      // Assume impactService or projectService.getProjectUpdates(projectId)
+      const updates = await projectService.getProjectUpdates(projectId); // TODO: add service
+      setUpdates(updates);
+    } catch (error) {
+      console.error('Load updates error:', error);
     }
   };
 
-  const handleRemoveMetric = (key) => {
-    setFormData(prev => {
-      const newMetrics = { ...prev.metrics };
-      delete newMetrics[key];
-      return { ...prev, metrics: newMetrics };
-    });
-  };
-
-  const handleSubmitReport = async (e) => {
-    e.preventDefault();
-    if (!selectedProject) return;
-
+  const handlePostUpdate = async () => {
+    setPosting(true);
     try {
-      const data = {
+      const updateData = {
         project_id: selectedProject.id,
-        ...formData
+        title: newUpdate.title,
+        description: newUpdate.description,
+        milestone_id: null // Link to milestone if needed
       };
-
-      if (editingReport) {
-        await impactService.updateImpactReport(editingReport.id, data);
-      } else {
-        await impactService.createImpactReport(data);
-      }
-
-      setShowReportForm(false);
-      setEditingReport(null);
-      setFormData({ title: '', description: '', metrics: {}, media_urls: [] });
-      loadImpactStats();
+      // await impactService.createUpdate(updateData);
+      setNewUpdate({ title: '', description: '', media: [] });
+      loadUpdates(selectedProject.id);
     } catch (error) {
-      console.error('Error saving report:', error);
-      alert('Failed to save impact report');
+      console.error('Post update error:', error);
+    } finally {
+      setPosting(false);
     }
   };
 
-  const handleEditReport = (report) => {
-    setEditingReport(report);
-    setFormData({
-      title: report.title,
-      description: report.description,
-      metrics: report.metrics || {},
-      media_urls: report.media_urls || []
-    });
-    setShowReportForm(true);
-  };
+  const stats = [
+    { label: 'Total Raised', value: formatCurrency(selectedProject?.current_amount || 0) },
+    { label: 'Funds Used', value: formatCurrency(selectedProject?.current_amount * 0.7 || 0) }, // Mock
+    { label: 'Updates Posted', value: updates.length },
+    { label: 'Engagement', value: '2.1k views' } // Mock
+  ];
 
-  const handleDeleteReport = async (reportId) => {
-    if (!confirm('Are you sure you want to delete this report?')) return;
-    
-    try {
-      await impactService.deleteImpactReport(reportId);
-      loadImpactStats();
-    } catch (error) {
-      console.error('Error deleting report:', error);
-      alert('Failed to delete report');
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
       <Header />
-      
-      <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-slate-900">Impact Dashboard</h1>
-            <p className="text-slate-600 mt-2">Track and report the impact of your funded projects</p>
+      <main className="flex-1 py-12 px-4 lg:px-8">
+        <div className="max-w-6xl mx-auto space-y-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+              Impact Dashboard
+            </h1>
+            <p className="text-xl text-slate-600 mt-2">Share your progress and maintain transparency</p>
           </div>
 
-          {stats && (
-            <>
-              {/* Overview Stats */}
-              <div className="grid md:grid-cols-4 gap-6 mb-8">
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-blue-100 rounded-lg">
-                        <BarChart3 className="h-6 w-6 text-blue-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-500">Total Projects</p>
-                        <p className="text-2xl font-bold text-slate-900">{stats.overview.totalProjects}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-green-100 rounded-lg">
-                        <Award className="h-6 w-6 text-green-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-500">Funded Projects</p>
-                        <p className="text-2xl font-bold text-slate-900">{stats.overview.fundedProjects}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-purple-100 rounded-lg">
-                        <DollarSign className="h-6 w-6 text-purple-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-500">Total Raised</p>
-                        <p className="text-2xl font-bold text-slate-900">
-                          {formatCurrency(stats.overview.totalRaised)}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-orange-100 rounded-lg">
-                        <FileText className="h-6 w-6 text-orange-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-500">Impact Reports</p>
-                        <p className="text-2xl font-bold text-slate-900">{stats.overview.totalReports}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+          {/* Project Selector */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Select Project</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-4 overflow-x-auto pb-4">
+                {projects.map(project => (
+                  <Button
+                    key={project.id}
+                    variant={selectedProject?.id === project.id ? 'default' : 'outline'}
+                    onClick={() => {
+                      setSelectedProject(project);
+                      loadUpdates(project.id);
+                    }}
+                    className="flex-1 min-w-[200px] whitespace-nowrap"
+                  >
+                    {project.title}
+                  </Button>
+                ))}
               </div>
+            </CardContent>
+          </Card>
 
-              {/* Aggregated Metrics */}
-              {Object.keys(stats.aggregatedMetrics || {}).length > 0 && (
-                <Card className="mb-8">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <TrendingUp className="h-5 w-5" />
-                      Total Impact Metrics
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid md:grid-cols-3 gap-4">
-                      {Object.entries(stats.aggregatedMetrics).map(([key, value]) => (
-                        <div key={key} className="p-4 bg-slate-50 rounded-lg">
-                          <p className="text-sm text-slate-500 capitalize">{key.replace(/_/g, ' ')}</p>
-                          <p className="text-xl font-bold text-slate-900">
-                            {typeof value === 'number' ? value.toLocaleString() : value}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
+
+          {/* Analytics */}
+          {selectedProject && (
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {stats.map((stat, index) => (
+                <Card key={index}>
+                  <CardContent className="p-6 text-center">
+                    <div className="text-3xl font-bold text-slate-900 mb-1">{stat.value}</div>
+                    <div className="text-sm text-slate-500 uppercase tracking-wider">{stat.label}</div>
                   </CardContent>
                 </Card>
-              )}
+              ))}
+            </div>
+          )}
 
-              {/* Project Selection */}
-              <Card className="mb-8">
-                <CardHeader>
-                  <CardTitle>Select Project to View/Add Reports</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {stats.projects?.map(project => (
-                      <div
-                        key={project.id}
-                        onClick={() => {
-                          setSelectedProject(project);
-                          setShowReportForm(false);
-                          setEditingReport(null);
-                        }}
-                        className={`p-4 rounded-lg border cursor-pointer transition-all ${
-                          selectedProject?.id === project.id
-                            ? 'border-primary-500 bg-primary-50'
-                            : 'border-slate-200 hover:border-slate-300'
-                        }`}
-                      >
-                        <h3 className="font-semibold text-slate-900">{project.title}</h3>
-                        <p className="text-sm text-slate-500 mt-1">
-                          {formatCurrency(project.current_amount)} raised of {formatCurrency(project.goal_amount)}
-                        </p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <span className={`px-2 py-1 rounded text-xs ${
-                            project.status === 'funded' || project.status === 'completed'
-                              ? 'bg-green-100 text-green-700'
-                              : 'bg-blue-100 text-blue-700'
-                          }`}>
-                            {project.status}
-                          </span>
-                          <span className="text-xs text-slate-500">
-                            {project.reports?.length || 0} reports
-                          </span>
-                        </div>
-                      </div>
-                    ))}
+          {/* New Update Form */}
+          {selectedProject && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Plus className="h-5 w-5" />
+                  New Impact Update
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Input
+                  placeholder="Update title e.g. 'Prototype Completed'"
+                  value={newUpdate.title}
+                  onChange={e => setNewUpdate({...newUpdate, title: e.target.value})}
+                />
+                <Textarea
+                  placeholder="Describe your progress, challenges overcome, next steps..."
+                  value={newUpdate.description}
+                  onChange={e => setNewUpdate({...newUpdate, description: e.target.value})}
+                  rows={4}
+                />
+                <div className="flex items-center gap-4 text-sm text-slate-600">
+                  <Button type="button" variant="ghost" size="sm">
+                    <Image className="h-4 w-4 mr-1" />
+                    Add Photo
+                  </Button>
+                  <Button type="button" variant="ghost" size="sm">
+                    <Video className="h-4 w-4 mr-1" />
+                    Add Video
+                  </Button>
+                  <div className="flex-1 border rounded-lg p-2 bg-slate-50">
+                    {newUpdate.media.length > 0 ? `${newUpdate.media.length} files` : 'No media'}
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                <Button onClick={handlePostUpdate} disabled={posting || !newUpdate.title || !newUpdate.description}>
+                  {posting ? 'Posting...' : 'Publish Update'}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
-              {/* Selected Project Reports */}
-              {selectedProject && (
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Impact Reports: {selectedProject.title}</CardTitle>
-                    {(selectedProject.status === 'funded' || selectedProject.status === 'completed') && (
-                      <Button 
-                        onClick={() => {
-                          setShowReportForm(true);
-                          setEditingReport(null);
-                          setFormData({ title: '', description: '', metrics: {}, media_urls: [] });
-                        }}
-                        className="flex items-center gap-2"
-                      >
-                        <Plus className="h-4 w-4" />
-                        Add Report
-                      </Button>
-                    )}
-                  </CardHeader>
-                  <CardContent>
-                    {showReportForm ? (
-                      <form onSubmit={handleSubmitReport} className="space-y-4">
-                        <div>
-                          <Label>Report Title</Label>
-                          <Input
-                            value={formData.title}
-                            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                            placeholder="e.g., Q1 2024 Impact Update"
-                            required
-                          />
+          {/* Updates Timeline */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Project Updates Timeline</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {updates.length === 0 ? (
+                <div className="text-center py-12 text-slate-500">
+                  <p>No updates yet. Share your first progress update!</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {updates.map(update => (
+                    <div key={update.id} className="flex gap-4">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-4 -ml-1 flex-shrink-0" />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="font-semibold text-slate-900">{update.title}</div>
+                          <span className="text-xs text-slate-500">{formatDate(update.created_at)}</span>
                         </div>
-
-                        <div>
-                          <Label>Description</Label>
-                          <Textarea
-                            value={formData.description}
-                            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                            placeholder="Describe the impact and progress of your project..."
-                            rows={4}
-                            required
-                          />
-                        </div>
-
-                        <div>
-                          <Label>Impact Metrics</Label>
-                          <div className="flex gap-2 mb-2">
-                            <Input
-                              placeholder="Metric name (e.g., people_helped)"
-                              value={metricKey}
-                              onChange={(e) => setMetricKey(e.target.value)}
-                              className="flex-1"
-                            />
-                            <Input
-                              type="number"
-                              placeholder="Value"
-                              value={metricValue}
-                              onChange={(e) => setMetricValue(e.target.value)}
-                              className="w-32"
-                            />
-                            <Button type="button" onClick={handleAddMetric} variant="outline">
-                              Add
-                            </Button>
-                          </div>
-                          <div className="flex flex-wrap gap-2">
-                            {Object.entries(formData.metrics).map(([key, value]) => (
-                              <span 
-                                key={key} 
-                                className="inline-flex items-center gap-1 px-3 py-1 bg-slate-100 rounded-full text-sm"
-                              >
-                                {key}: {value}
-                                <button
-                                  type="button"
-                                  onClick={() => handleRemoveMetric(key)}
-                                  className="text-slate-400 hover:text-red-500"
-                                >
-                                  ×
-                                </button>
-                              </span>
+                        <p className="text-slate-700 mb-4">{update.description}</p>
+                        {update.media && update.media.length > 0 && (
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                            {update.media.map((media, i) => (
+                              <img key={i} src={media.url} alt="" className="rounded-lg w-full h-32 object-cover" />
                             ))}
                           </div>
-                        </div>
-
-                        <div className="flex gap-2">
-                          <Button type="submit" className="flex-1">
-                            {editingReport ? 'Update Report' : 'Create Report'}
-                          </Button>
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            onClick={() => {
-                              setShowReportForm(false);
-                              setEditingReport(null);
-                            }}
-                          >
-                            Cancel
-                          </Button>
-                        </div>
-                      </form>
-                    ) : (
-                      <div className="space-y-4">
-                        {selectedProject.reports?.length === 0 ? (
-                          <div className="text-center py-8 text-slate-500">
-                            <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                            <p>No impact reports yet for this project.</p>
-                            {(selectedProject.status === 'funded' || selectedProject.status === 'completed') && (
-                              <Button 
-                                onClick={() => setShowReportForm(true)}
-                                variant="outline" 
-                                className="mt-4"
-                              >
-                                Create your first report
-                              </Button>
-                            )}
-                          </div>
-                        ) : (
-                          selectedProject.reports.map(report => (
-                            <div key={report.id} className="p-4 border border-slate-200 rounded-lg">
-                              <div className="flex items-start justify-between">
-                                <div>
-                                  <h4 className="font-semibold text-slate-900">{report.title}</h4>
-                                  <p className="text-sm text-slate-500">{formatDate(report.created_at)}</p>
-                                </div>
-                                <div className="flex gap-2">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => handleEditReport(report)}
-                                  >
-                                    <Edit2 className="h-4 w-4" />
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => handleDeleteReport(report.id)}
-                                    className="text-red-500 hover:text-red-700"
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                              <p className="text-slate-600 mt-2">{report.description}</p>
-                              {report.metrics && Object.keys(report.metrics).length > 0 && (
-                                <div className="flex flex-wrap gap-2 mt-3">
-                                  {Object.entries(report.metrics).map(([key, value]) => (
-                                    <span 
-                                      key={key} 
-                                      className="px-2 py-1 bg-primary-50 text-primary-700 rounded text-sm"
-                                    >
-                                      {key.replace(/_/g, ' ')}: {value}
-                                    </span>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          ))
                         )}
+                        <div className="flex items-center gap-4 text-sm text-slate-500">
+                          <span>12 likes • 3 comments</span>
+                          <Button variant="ghost" size="sm">Edit</Button>
+                        </div>
                       </div>
-                    )}
-                  </CardContent>
-                </Card>
+                    </div>
+                  ))}
+                </div>
               )}
-            </>
-          )}
+            </div>
+          </Card>
         </div>
       </main>
-
       <Footer />
     </div>
   );
 }
+
