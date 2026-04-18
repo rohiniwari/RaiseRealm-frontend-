@@ -226,19 +226,27 @@ export default function CreateProject() {
       <Input name="image_url" type="url" value={formData.image_url} onChange={handleChange} />
     </div>,
 
+
     // Step 2: Rewards
     <div className="space-y-4">
       <h3>Rewards</h3>
       {formData.rewards.map((r, i) => (
-        <div key={i} className="p-4 border rounded">
+        <div key={i} className="p-4 border rounded space-y-2">
           <Input placeholder="Title" value={r.title} onChange={e => handleRewardChange(i, 'title', e.target.value)} />
-          <Input type="number" placeholder="Min Amount" value={r.min_amount} onChange={e => handleRewardChange(i, 'min_amount', e.target.value)} />
+          <div className="grid grid-cols-2 gap-2">
+            <Input type="number" placeholder="Min Amount" value={r.min_amount} onChange={e => handleRewardChange(i, 'min_amount', e.target.value)} />
+            <Input type="number" placeholder="Max Backers (opt)" value={r.max_backers || ''} onChange={e => handleRewardChange(i, 'max_backers', e.target.value || null)} />
+          </div>
           <Textarea placeholder="Description" value={r.description} onChange={e => handleRewardChange(i, 'description', e.target.value)} />
-          <Button type="button" variant="outline" onClick={() => removeReward(i)}>Remove</Button>
+          <div className="flex gap-2">
+            <Input type="date" placeholder="Est Delivery" value={r.delivery_date || ''} onChange={e => handleRewardChange(i, 'delivery_date', e.target.value)} />
+            <Button type="button" variant="outline" onClick={() => removeReward(i)}>Remove</Button>
+          </div>
         </div>
       ))}
-      <Button type="button" onClick={addReward}>Add Reward</Button>
+      <Button type="button" onClick={addReward}>+ Add Reward Tier</Button>
     </div>,
+
 
     // Step 3: Milestones
     <div className="space-y-4">
