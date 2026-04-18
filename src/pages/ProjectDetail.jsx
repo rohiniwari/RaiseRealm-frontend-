@@ -168,20 +168,67 @@ export default function ProjectDetail() {
                 <div className="mt-6 grid gap-4 sm:grid-cols-3">
                   <div className="rounded-2xl bg-slate-100 dark:bg-slate-800 p-4">
                     <p className="text-sm uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Raised</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{formatCurrency(project.current_amount || project.raised || 0)}</p>
+                    <p className="text-2xl font-semibold text-slate-900 dark:text-white">{formatCurrency(project.current_amount || project.raised || 0)}</p>
                   </div>
                   <div className="rounded-2xl bg-slate-100 dark:bg-slate-800 p-4">
                     <p className="text-sm uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Goal</p>
                     <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{formatCurrency(project.goal_amount || project.goal)}</p>
                   </div>
                   <div className="rounded-2xl bg-slate-100 dark:bg-slate-800 p-4">
-                    <p className="text-sm uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Time left</p>
-                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{daysLeft} days</p>
+                    <p className="text-sm uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">Backers</p>
+                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">{contributions.length}</p>
                   </div>
                 </div>
 
-                <Progress value={parseInt(progressValue)} size="lg" className="mt-6 h-4" />
-                <p className="mt-3 text-sm text-slate-500">{progressValue}% funded</p>
+                {/* Enhanced Animated Progress Bar */}
+                <div className="mt-8">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-slate-700">{progressValue}% funded</span>
+                    <span className="text-sm text-slate-500">
+                      {daysLeft > 0 ? `${daysLeft} days left` : 'Campaign Ended'}
+                    </span>
+                  </div>
+                  
+                  <div className="relative">
+                    <div className="w-full bg-slate-200 rounded-full h-4 overflow-hidden shadow">
+                      <div 
+                        className={`
+                          h-full transition-all duration-1000 ease-out rounded-full shadow-lg
+                          ${progressValue < 25 ? 'bg-orange-400' : ''}
+                          ${progressValue < 50 ? 'bg-yellow-400' : ''}
+                          ${progressValue < 75 ? 'bg-emerald-400' : ''}
+                          ${progressValue < 100 ? 'bg-blue-500 animate-pulse' : 'bg-green-500'}
+                        `}
+                        style={{ width: `${progressValue}%` }}
+                      />
+                    </div>
+                    
+                    {/* Milestone Indicators */}
+                    {[25, 50, 75, 100].map((milestone) => (
+                      <div 
+                        key={milestone}
+                        className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-white border-2 border-slate-200 rounded-full -translate-x-1/2"
+                        style={{ left: `${milestone}%` }}
+                      >
+                        {progressValue >= milestone && (
+                          <div className="w-4 h-4 bg-green-500 rounded-full absolute -top-1 -right-1 animate-ping" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Status Message */}
+                  <p className="mt-3 text-sm font-medium">
+                    {progressValue === 0 && 'Just starting! Be the first backer.'}
+                    {progressValue < 25 && 'Getting started'}
+                    {progressValue < 50 && 'On track'}
+                    {progressValue < 75 && 'Almost there!'}
+                    {progressValue < 100 && 'So close to goal!'}
+                    {progressValue === 100 && '🎉 Goal Achieved!'}
+                    {progressValue > 100 && 'Fully funded + bonus!'}
+                  </p>
+                </div>
+
               </div>
 
               {project.milestones && project.milestones.length > 0 && (
