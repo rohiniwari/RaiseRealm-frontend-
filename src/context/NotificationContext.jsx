@@ -13,8 +13,30 @@ export const useNotifications = () => {
 };
 
 export const NotificationProvider = ({ children }) => {
-  const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [notifications, setNotifications] = useState([
+    {
+      id: 1,
+      message: "Welcome to RaiseRealm! Your AI-powered crowdfunding platform is ready.",
+      type: 'success',
+      read: false,
+      timestamp: new Date().toLocaleString()
+    },
+    {
+      id: 2,
+      message: "New project 'AI-Powered Learning Platform' matches your interests!",
+      type: 'info',
+      read: false,
+      timestamp: new Date(Date.now() - 3600000).toLocaleString()
+    },
+    {
+      id: 3,
+      message: "Milestone completed: 'Sustainable Urban Farming' reached 70% funding!",
+      type: 'success',
+      read: true,
+      timestamp: new Date(Date.now() - 7200000).toLocaleString()
+    }
+  ]);
+  const [unreadCount, setUnreadCount] = useState(2);
   const { toast } = useToast();
 
   const addNotification = (message, type = 'info') => {

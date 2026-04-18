@@ -205,7 +205,7 @@ export default function ImpactDashboard() {
                   ))}
                 </div>
               )}
-            </div>
+            </CardContent>
           </Card>
         </div>
       </main>

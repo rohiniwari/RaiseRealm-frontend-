@@ -40,8 +40,6 @@ const createProjectSchema = z.object({
   })).optional()
 });
 
-type CreateProjectForm = z.infer<typeof createProjectSchema>;
-
 export default function CreateProject() {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();

@@ -11,10 +11,10 @@ const NotificationBell = () => {
   const markAllAsRead = () => clearAll();
 
   return (
-    <div className="relative">
+    <div className="fixed top-4 right-4 z-50">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        className="relative p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700"
         aria-label="Notifications"
       >
         🔔
