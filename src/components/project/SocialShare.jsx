@@ -7,11 +7,13 @@ const SocialShare = ({ project }) => {
   const shareUrl = window.location.href;
   const shareText = `Check out this project: ${project.title}`;
 
-  const shareLinks = {
+const shareLinks = {
+    whatsapp: `https://wa.me/?text=${encodeURIComponent(`${project.title} - ${shareText} ${shareUrl}`)}`,
     twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`
   };
+
 
   const copyToClipboard = async () => {
     try {
@@ -32,12 +34,20 @@ const SocialShare = ({ project }) => {
       <span className="text-sm text-gray-600 dark:text-gray-300 mr-2">Share:</span>
 
       <button
+        onClick={() => openShareWindow(shareLinks.whatsapp)}
+        className="p-3 rounded-lg bg-green-500 hover:bg-green-600 text-white shadow-md transition-all"
+        aria-label="Share on WhatsApp"
+      >
+        📱
+      </button>
+      <button
         onClick={() => openShareWindow(shareLinks.twitter)}
-        className="p-2 rounded-lg text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+        className="p-3 rounded-lg bg-blue-500 hover:bg-blue-600 text-white shadow-md transition-all"
         aria-label="Share on Twitter"
       >
         🐦
       </button>
+
 
       <button
         onClick={() => openShareWindow(shareLinks.facebook)}
