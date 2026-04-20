@@ -9,6 +9,7 @@ import { Label } from '../components/ui/label';
 import { projectService } from '../services/projectService';
 import { contributionService } from '../services/contributionService';
 import { commentService } from '../services/commentService';
+import { useNotifications } from '../context/NotificationContext';
 import { formatCurrency, calculateDaysLeft, calculateProgress, formatDate, calculateMilestoneProgress } from '../utils/helpers';
 import SocialShare from '../components/project/SocialShare';
 import CampaignUpdates from '../components/project/CampaignUpdates';
@@ -20,6 +21,7 @@ import ContributionModal from '../components/payment/ContributionModal';
 export default function ProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addNotification } = useNotifications();
   const [project, setProject] = useState(null);
   const [comments, setComments] = useState([]);
   const [contributions, setContributions] = useState([]);
@@ -81,6 +83,7 @@ export default function ProjectDetail() {
 
     try {
       await commentService.createComment({ project_id: id, content: commentValue });
+      addNotification('Your comment has been posted!', 'success');
       setCommentValue('');
       loadComments();
     } catch (err) {

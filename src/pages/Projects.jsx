@@ -20,6 +20,13 @@ export default function Projects() {
     loadProjects();
   }, [category, sort]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadProjects();
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
   const loadProjects = async () => {
     setLoading(true);
     try {

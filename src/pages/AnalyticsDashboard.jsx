@@ -23,11 +23,28 @@ import { BarChart3, Users, DollarSign, TrendingUp, Filter, Activity } from 'luci
 
 const AnalyticsDashboard = () => {
   const { user } = useAuth();
-  const [selectedTimeRange, setSelectedTimeRange] = useState('all');
-  const [activeProject, setActiveProject] = useState('project-1');
-  const [loading, setLoading] = useState(false);
+  const [selectedTimeRange, setSelectedTimeRange] = useState('30days');
+  const [activeProject, setActiveProject] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [analyticsData, setAnalyticsData] = useState([]);
 
-  const analyticsData = {
+  useEffect(() => {
+    if (activeProject) {
+      loadAnalytics();
+    }
+  }, [activeProject, selectedTimeRange]);
+
+  const loadAnalytics = async () => {
+    setLoading(true);
+    try {
+      const data = await projectService.getAnalytics(activeProject, selectedTimeRange);
+      setAnalyticsData(data);
+    } catch (error) {
+      console.error('Failed to load analytics:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
     totalRaised: 2450000,
     totalBackers: 890,
     avgDonation: 2750,

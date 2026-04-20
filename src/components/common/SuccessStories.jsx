@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import Skeleton from '../ui/Skeleton';
+import { projectService } from '../../services/projectService';
+import { formatCurrency } from '../../utils/helpers';
 
 const SuccessStories = () => {
   const [stories, setStories] = useState([]);
@@ -12,38 +14,19 @@ const SuccessStories = () => {
 
   const fetchSuccessStories = async () => {
     try {
-      // Mock success stories - replace with actual API call
-      const mockStories = [
-        {
-          id: 1,
-          title: "Community Garden Project",
-          description: "Raised $15,000 to create a sustainable community garden that now feeds 200 families weekly.",
-          raised: 15000,
-          goal: 12000,
-          image: "/api/placeholder/400/300",
-          category: "Community"
-        },
-        {
-          id: 2,
-          title: "Indie Game Development",
-          description: "A small team raised $50,000 to develop their dream game, now with 100k+ downloads.",
-          raised: 50000,
-          goal: 30000,
-          image: "/api/placeholder/400/300",
-          category: "Gaming"
-        },
-        {
-          id: 3,
-          title: "Educational App for Kids",
-          description: "Parents and teachers came together to fund an educational app that's now used in 50 schools.",
-          raised: 25000,
-          goal: 20000,
-          image: "/api/placeholder/400/300",
-          category: "Education"
-        }
-      ];
-
-      setStories(mockStories);
+      const successProjects = await projectService.getSuccessStories();
+      // Format the data for display
+      const formattedStories = successProjects.map(project => ({
+        id: project.id,
+        title: project.title,
+        description: project.description,
+        raised: project.current_amount,
+        goal: project.goal_amount,
+        image: project.image_url || '/api/placeholder/400/300',
+        category: project.category,
+        creator: project.creator?.name || 'Unknown'
+      }));
+      setStories(formattedStories);
     } catch (error) {
       console.error('Failed to fetch success stories:', error);
     } finally {
@@ -110,7 +93,7 @@ const SuccessStories = () => {
               </p>
 
               <div className="text-sm text-gray-500 dark:text-gray-400">
-                Raised ${story.raised.toLocaleString()} of ${story.goal.toLocaleString()}
+                Raised {formatCurrency(story.raised)} of {formatCurrency(story.goal)}
               </div>
             </div>
           </Card>

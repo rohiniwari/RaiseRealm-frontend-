@@ -6,6 +6,7 @@ import api from '../../services/api';
 import { projectService } from '../../services/projectService';
 import { Button } from '../ui/button';
 import { formatCurrency } from '../../utils/helpers';
+import { useNotifications } from '../../context/NotificationContext';
 
 
 export default function ContributionModal({ 
@@ -26,6 +27,7 @@ export default function ContributionModal({
   const [amount, setAmount] = useState(propAmount || 0);
   const [minAmount, setMinAmount] = useState(0);
   const [rewardError, setRewardError] = useState('');
+  const { addNotification } = useNotifications();
 
   useEffect(() => {
     if (isOpen && projectId) {
@@ -83,15 +85,15 @@ export default function ContributionModal({
         setClientSecret(response.data.clientSecret);
       }
     } catch (error) {
-      console.warn('API not available, simulating payment intent creation');
-      // Mock client secret for testing
-      setClientSecret('pi_mock_client_secret_' + Date.now());
+      console.error('Failed to create payment intent:', error);
+      setError('Payment system is currently unavailable. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleSuccess = (paymentIntent) => {
+    addNotification(`Successfully contributed ${formatCurrency(amount)} to this project!`, 'success');
     onSuccess?.(paymentIntent);
     setTimeout(() => onClose(), 2000);
   };

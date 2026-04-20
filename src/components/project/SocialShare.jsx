@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from '../ui/button';
+import { MessageCircle, Twitter, Facebook, Linkedin, Copy } from 'lucide-react';
 
 const SocialShare = ({ project }) => {
   const [copied, setCopied] = useState(false);
@@ -38,14 +39,14 @@ const shareLinks = {
         className="p-3 rounded-lg bg-green-500 hover:bg-green-600 text-white shadow-md transition-all"
         aria-label="Share on WhatsApp"
       >
-        📱
+        <MessageCircle className="h-5 w-5" />
       </button>
       <button
         onClick={() => openShareWindow(shareLinks.twitter)}
         className="p-3 rounded-lg bg-blue-500 hover:bg-blue-600 text-white shadow-md transition-all"
         aria-label="Share on Twitter"
       >
-        🐦
+        <Twitter className="h-5 w-5" />
       </button>
 
 
@@ -54,7 +55,7 @@ const shareLinks = {
         className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
         aria-label="Share on Facebook"
       >
-        📘
+        <Facebook className="h-5 w-5" />
       </button>
 
       <button
@@ -62,7 +63,7 @@ const shareLinks = {
         className="p-2 rounded-lg text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
         aria-label="Share on LinkedIn"
       >
-        💼
+        <Linkedin className="h-5 w-5" />
       </button>
 
       <button
@@ -70,7 +71,7 @@ const shareLinks = {
         className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         aria-label="Copy link"
       >
-        {copied ? '✅' : '🔗'}
+        {copied ? <Copy className="h-5 w-5 text-green-600" /> : <Copy className="h-5 w-5" />}
       </button>
     </div>
   );

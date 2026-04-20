@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useAuth } from '../context/AuthContext';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
@@ -18,8 +19,6 @@ import { categories } from '../utils/helpers';
 const roleGuardSchema = z.object({
   role: z.enum(['creator']),
 });
-
-import { z } from 'zod';
 
 const createProjectSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 chars'),

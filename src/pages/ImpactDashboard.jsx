@@ -58,6 +58,7 @@ export default function ImpactDashboard() {
         milestone_id: null // Link to milestone if needed
       };
       // await impactService.createUpdate(updateData);
+      await projectService.createProjectUpdate(updateData);
       setNewUpdate({ title: '', description: '', media: [] });
       loadUpdates(selectedProject.id);
     } catch (error) {
