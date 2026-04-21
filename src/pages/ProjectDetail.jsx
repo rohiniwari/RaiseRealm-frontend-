@@ -18,6 +18,8 @@ import SupporterBadge from '../components/project/SupporterBadge';
 import MilestoneTracker from '../components/project/MilestoneTracker';
 import Skeleton from '../components/ui/Skeleton';
 import ContributionModal from '../components/payment/ContributionModal';
+import StatsOverview from '../components/project/StatsOverview';
+import RichCommentEditor from '../components/ui/RichCommentEditor';
 
 export default function ProjectDetail() {
   const { id } = useParams();

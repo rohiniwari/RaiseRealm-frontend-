@@ -1,0 +1,23 @@
+import { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Textarea } from '../components/ui/textarea';
+import { Label } from '../components/ui/label';
+import { projectService } from '../services/projectService';
+import { contributionService } from '../services/contributionService';
+import { commentService } from '../services/commentService';
+import { useNotifications } from '../context/NotificationContext';
+import { useAuth } from '../context/AuthContext';
+import { formatCurrency, calculateDaysLeft, calculateProgress, formatDate, calculateMilestoneProgress } from '../utils/helpers';
+import SocialShare from '../components/project/SocialShare';
+import CampaignUpdates from '../components/project/CampaignUpdates';
+import SupporterBadge from '../components/project/SupporterBadge';
+import MilestoneTracker from '../components/project/MilestoneTracker';
+import Skeleton from '../components/ui/Skeleton';
+import ContributionModal from '../components/payment/ContributionModal';
+
+import StatsOverview from '../components/project/StatsOverview';
+import RichCommentEditor from '../components/ui/RichCommentEditor';

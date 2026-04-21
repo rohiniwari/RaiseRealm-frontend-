@@ -41,9 +41,8 @@ function App() {
                 <Route path="/backed-projects" element={<Dashboard />} />
                 <Route path="/how-it-works" element={<HowItWorks />} />
                 <Route path="/trust" element={<Trust />} />
-<Route path="/impact-dashboard" element={<ImpactDashboard />} />
-<Route path="/impact-reports/:projectId" element={<ImpactDashboard />} />
-
+                <Route path="/impact-dashboard" element={<ImpactDashboard />} />
+                <Route path="/impact-reports/:projectId" element={<ImpactDashboard />} />
                 <Route path="/analytics" element={<AnalyticsDashboard />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
@@ -52,10 +51,8 @@ function App() {
         </NotificationProvider>
       </ThemeProvider>
       <ToastContainer />
-      <ToastContainer />
     </ErrorBoundary>
   );
 }
 
 export default App;
-
