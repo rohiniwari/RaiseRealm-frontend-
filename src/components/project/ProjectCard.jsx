@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '../ui/card';
+import { Button } from '../ui/button';
 import { formatCurrency, calculateDaysLeft, calculateProgress } from '../../utils/helpers';
 import { Heart, Share2, Copy, Twitter, Facebook, Linkedin } from 'lucide-react';
 
