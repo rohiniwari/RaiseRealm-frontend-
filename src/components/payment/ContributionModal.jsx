@@ -27,6 +27,7 @@ export default function ContributionModal({
   const [amount, setAmount] = useState(propAmount || 0);
   const [minAmount, setMinAmount] = useState(0);
   const [rewardError, setRewardError] = useState('');
+  const [error, setError] = useState('');
   const { addNotification } = useNotifications();
 
   useEffect(() => {
@@ -112,12 +113,24 @@ export default function ContributionModal({
         
         {/* Reward Select */}
         <div className="space-y-4 mb-6">
-          <label className="text-sm font-medium block">Select Reward (optional)</label>
+          {error && (
+            <div className="p-3 text-sm text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400 rounded-lg">
+              {error}
+            </div>
+          )}
+          <label className="text-sm font-medium block text-slate-900 dark:text-white">Select Reward (optional)</label>
           <select 
             value={selectedRewardId || ''}
             onChange={(e) => handleRewardChange(e.target.value || null)}
-            className="w-full p-3 border rounded-lg focus:ring-2"
+            className="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
           >
+            <option value="">Direct Support</option>
+            {rewards.map(reward => (
+              <option key={reward.id} value={reward.id}>
+                {reward.title} (min {formatCurrency(reward.min_amount)})
+              </option>
+            ))}
+          </select>
             <option value="">Direct Support</option>
             {rewards.map(reward => (
               <option key={reward.id} value={reward.id}>
@@ -127,12 +140,12 @@ export default function ContributionModal({
           </select>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium block">Amount</label>
+            <label className="text-sm font-medium block text-slate-900 dark:text-white">Amount</label>
             <input 
               type="number"
               value={amount}
               onChange={(e) => setAmount(Math.max(minAmount || 1, parseFloat(e.target.value) || 0))}
-              className="w-full p-3 border rounded-lg focus:ring-2"
+              className="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
               min={minAmount}
             />
             {rewardError && <p className="text-sm text-red-500">{rewardError}</p>}

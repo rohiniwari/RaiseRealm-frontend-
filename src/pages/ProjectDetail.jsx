@@ -10,6 +10,7 @@ import { projectService } from '../services/projectService';
 import { contributionService } from '../services/contributionService';
 import { commentService } from '../services/commentService';
 import { useNotifications } from '../context/NotificationContext';
+import { useAuth } from '../context/AuthContext';
 import { formatCurrency, calculateDaysLeft, calculateProgress, formatDate, calculateMilestoneProgress } from '../utils/helpers';
 import SocialShare from '../components/project/SocialShare';
 import CampaignUpdates from '../components/project/CampaignUpdates';
@@ -22,6 +23,7 @@ export default function ProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addNotification } = useNotifications();
+  const { user } = useAuth();
   const [project, setProject] = useState(null);
   const [comments, setComments] = useState([]);
   const [contributions, setContributions] = useState([]);
@@ -249,8 +251,17 @@ export default function ProjectDetail() {
                       <p className="mt-2 text-xl font-semibold text-slate-900 dark:text-white">{formatCurrency(project.minimum_contribution || 0)} minimum</p>
                     </div>
                   </div>
-                  <Button className="mt-6 w-full" onClick={() => setShowContributionModal(true)}>
-                    Contribute Now
+                  <Button 
+                    className="mt-6 w-full" 
+                    onClick={() => {
+                      if (!user) {
+                        navigate('/login');
+                        return;
+                      }
+                      setShowContributionModal(true);
+                    }}
+                  >
+                    {user ? 'Contribute Now' : 'Login to Contribute'}
                   </Button>
                 </div>
                 <SupporterBadge contributions={contributions} />
@@ -321,6 +332,16 @@ export default function ProjectDetail() {
         </div>
       </main>
       <Footer />
+      
+      <ContributionModal
+        isOpen={showContributionModal}
+        onClose={() => setShowContributionModal(false)}
+        projectId={id}
+        onSuccess={() => {
+          loadProject();
+          loadContributions();
+        }}
+      />
     </div>
   );
 }
