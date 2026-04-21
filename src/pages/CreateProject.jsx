@@ -142,7 +142,7 @@ export default function CreateProject() {
 
   const handlePrev = () => setStep(Math.max(0, step - 1));
 
-  const handleSubmit = async () => {
+  const handleFormSubmit = async () => {
     setLoading(true);
     setError('');
     try {
@@ -264,7 +264,7 @@ export default function CreateProject() {
     <div className="grid lg:grid-cols-2 gap-8 items-start">
       <div>
         <h3>Review & Preview</h3>
-        <Button onClick={handleSubmit} disabled={loading} className="w-full mb-4">
+        <Button onClick={handleFormSubmit} disabled={loading} className="w-full mb-4">
           {loading ? 'Creating...' : 'Launch Project'}
         </Button>
         <Button type="button" variant="outline" onClick={handlePrev} className="w-full">

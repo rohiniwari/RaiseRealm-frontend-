@@ -131,13 +131,6 @@ export default function ContributionModal({
               </option>
             ))}
           </select>
-            <option value="">Direct Support</option>
-            {rewards.map(reward => (
-              <option key={reward.id} value={reward.id}>
-                {reward.title} (min {formatCurrency(reward.min_amount)})
-              </option>
-            ))}
-          </select>
           
           <div className="space-y-2">
             <label className="text-sm font-medium block text-slate-900 dark:text-white">Amount</label>

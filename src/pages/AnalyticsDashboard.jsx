@@ -4,7 +4,6 @@ import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import {
   LineChart,
   Line,
@@ -45,32 +44,11 @@ const AnalyticsDashboard = () => {
       setLoading(false);
     }
   };
-    totalRaised: 2450000,
-    totalBackers: 890,
-    avgDonation: 2750,
-    progress: 73,
-    trends: [
-      { date: 'Jan 1', raised: 12000 },
-      { date: 'Jan 8', raised: 34000 },
-      { date: 'Jan 15', raised: 58000 },
-      { date: 'Jan 22', raised: 112000 },
-      { date: 'Jan 29', raised: 189000 },
-      { date: 'Feb 5', raised: 245000 },
-      { date: 'Feb 12', raised: 320000 }
-    ],
-    donorRanges: [
-      { name: '₹100-500', value: 60, color: '#10b981' },
-      { name: '₹500-1K', value: 30, color: '#3b82f6' },
-      { name: '₹1K+', value: 10, color: '#ef4444' }
-    ],
-    engagement: { comments: 450, likes: 2100, shares: 320 },
-    repeatDonors: 120
-  };
 
   const timeRanges = [
-    { value: '7d', label: 'Last 7 Days' },
-    { value: '30d', label: 'Last 30 Days' },
-    { value: 'all', label: 'All Time' }
+    { value: '7days', label: 'Last 7 Days' },
+    { value: '30days', label: 'Last 30 Days' },
+    { value: '90days', label: 'Last 90 Days' }
   ];
 
   return (
@@ -87,16 +65,15 @@ const AnalyticsDashboard = () => {
                 <p className="text-gray-600 dark:text-gray-300">Real-time insights to optimize your campaign</p>
               </div>
             </div>
-            <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Time range" />
-              </SelectTrigger>
-              <SelectContent>
-                {timeRanges.map(range => (
-                  <SelectItem key={range.value} value={range.value}>{range.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <select 
+              value={selectedTimeRange} 
+              onChange={(e) => setSelectedTimeRange(e.target.value)}
+              className="w-[180px] p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+            >
+              {timeRanges.map(range => (
+                <option key={range.value} value={range.value}>{range.label}</option>
+              ))}
+            </select>
           </div>
 
           {/* Summary Cards */}
@@ -186,7 +163,6 @@ const AnalyticsDashboard = () => {
                 <ResponsiveContainer width="100%" height={350}>
                   <PieChart>
                     <Pie
-                      data={analyticsData.donorRanges}
                       dataKey="value"
                       nameKey="name"
                       cx="50%"
