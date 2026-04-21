@@ -17,6 +17,7 @@ import Trust from './pages/Trust';
 import ImpactDashboard from './pages/ImpactDashboard';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import NotFound from './pages/NotFound';
+import { ToastContainer } from './components/ui/ToastContainer';
 import './index.css';
 
 function App() {
@@ -50,6 +51,8 @@ function App() {
           </AuthProvider>
         </NotificationProvider>
       </ThemeProvider>
+      <ToastContainer />
+      <ToastContainer />
     </ErrorBoundary>
   );
 }

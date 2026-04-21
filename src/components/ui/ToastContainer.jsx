@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useToast } from '../hooks/useToast';
+import { useToast } from '../../hooks/useToast.jsx';
 
 const ToastContainer = () => {
   const { toasts, removeToast } = useToast();

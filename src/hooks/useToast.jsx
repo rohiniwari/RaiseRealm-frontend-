@@ -24,6 +24,7 @@ const useToast = () => {
   const toast = (options) => addToast(options.description, options.title.toLowerCase());
 
   return {
+    toasts,
     toast,
     addToast,
     removeToast,
@@ -31,4 +32,3 @@ const useToast = () => {
 };
 
 export { useToast };
-
